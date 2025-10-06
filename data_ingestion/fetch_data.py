@@ -51,17 +51,19 @@ def quote_data(symbol:str):
 def quote_historic_data(symbol:str, period:str):
     
     series_list = ['TIME_SERIES_MONTHLY_ADJUSTED', 'TIME_SERIES_WEEKLY_ADJUSTED']
-    frequency = series_list[0] if period == 'monthly' else series_list[1]
+    frequency = series_list[0] if period == 'monthly' else series_list[1] if period == 'weekly' else None
     
     parameters = {'symbol':symbol, 'function':frequency, 'datatype':'csv', 'apikey':API_KEY}
     try:
         response = requests.get(f'{API_URL}/', params=parameters)
         response.raise_for_status()
         
-    except requests.RequestException:
+    except requests.RequestException as e:
+        print(f'API request failed: {e}')
         return None
     
     return response
+    
     
 ##TODO##  Complete the search box button  
     
@@ -71,7 +73,7 @@ def company_check(symbol:str):
         Accepts a ticker text from the user interface
     '''
     parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol}
-    headers={'Authorization': f'Bearer{API_KEY}'}
+    headers={'Authorization': f'Bearer {API_KEY}'}
     try:
         response = requests.get(f'{API_URL}/', params=parameters, headers=headers)
         response.raise_for_status()

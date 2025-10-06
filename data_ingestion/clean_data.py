@@ -19,12 +19,12 @@ def clean_stock(symbol, period:str):
     return new_data
 
 
-def reshape_data(df):
+def reshape_data(df, period):
     '''
         Function that renames colums from a Dataframe and merges calculated metrics
     '''
-    n_columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj_Close', 'Volume', 'Dividend_amt']
+    n_columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj_close', 'Volume', 'Dividend_amt']
     data = df.rename(columns = n_columns)
-    update_data = price_metrics(data)
+    update_data = price_metrics(data, period)
     
-    return update_data
+    return pd.DataFrame(update_data)

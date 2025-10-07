@@ -5,6 +5,7 @@ from data_ingestion.clean_data import clean_stock
 from utils.db_connection import connect_db
 
 
+
 def load_company_data(symbol:str):
     
     quote = get_company_data(symbol)
@@ -52,9 +53,10 @@ def load_daily_data(symbol:str):
                 INSERT OR IGNORE INTO financial_metrics(
                     global_id, date, symbol, open, high, low, price, previous_close, volume, change, change_percentage
                 )
-                VALUES (SELECT id FROM companies where symbol=?),
+                SELECT (SELECT id FROM companies where symbol=?),
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
+                symbol,
                 data.get('Global Quote', {}).get('07. latest trading day'),
                 data.get('Global Quote', {}).get('01. symbol'),
                 data.get('Global Quote', {}).get('02. open'),
@@ -66,9 +68,7 @@ def load_daily_data(symbol:str):
                 data.get('Global Quote', {}).get('09. change'),
                 data.get('Global Quote', {}).get('10. change percent'),
             )
-            
         )
-
         conn.commit()
     finally:
         conn.close()
@@ -86,7 +86,7 @@ def periodic_data(symbol:str, period:str):
                 INSERT OR REPLACE INTO periodic_metrics
                 (company_id, date, open, high, low, close, adjusted_close,volume, dividend_amt
                 _range, _return, _price_change, _avg_price, _open_to_close_ratio, _price_direction)
-                VALUES (
+                SELECT (
                     (SELECT id FROM companies where symbol=?),
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )

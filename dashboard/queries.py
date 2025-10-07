@@ -3,6 +3,12 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 from data_ingestion.fetch_data import company_check
+import logging
+
+## TODO Add loggin to track possible issues
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 ## TODO ##
 '''Update function to pull information from the fetch file'''

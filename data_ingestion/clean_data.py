@@ -10,7 +10,7 @@ def clean_stock(symbol, period:str):
     
     df = quote_historic_data(symbol, period)
     data = pd.read_csv(df, index_col=0)
-    data = data.infer_objects().dtypes
+    data = data.infer_objects()
     data.sort_index(inplace=True)
     null_values = data.isna().sum()
     clean_data = data.dropna()
@@ -23,7 +23,7 @@ def reshape_data(df, period):
     '''
         Function that renames colums from a Dataframe and merges calculated metrics
     '''
-    n_columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Adj_close', 'Volume', 'Dividend_amt']
+    n_columns = ['date', 'open', 'high', 'low', 'close', 'adj_close', 'volume', 'dividend_amt']
     data = df.rename(columns = n_columns)
     update_data = price_metrics(data, period)
     

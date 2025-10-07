@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from utils.db_connection import logger
 
 
 API_KEY = st.secrets['api']['key']
@@ -17,7 +18,7 @@ def get_company_data(symbol:str):
         response.raise_for_status()
         
     except requests.RequestException as e:
-        print(f'API request failed: {e}')
+        logger.error(f'API request failed: {e}')
         return None
 
     try:
@@ -42,7 +43,7 @@ def quote_data(symbol:str):
         response.raise_for_status()
         
     except requests.RequestException as e:
-        print(f'API request failed: {e}')
+        logger.error(f'API request failed: {e}')
         return None
     
     return response
@@ -59,7 +60,7 @@ def quote_historic_data(symbol:str, period:str):
         response.raise_for_status()
         
     except requests.RequestException as e:
-        print(f'API request failed: {e}')
+        logger.error(f'API request failed: {e}')
         return None
     
     return response

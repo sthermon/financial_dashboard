@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 from data_ingestion.fetch_data import get_company_data, quote_data, quote_historic_data
 from data_ingestion.clean_data import clean_stock
-from utils.db_connection import connect_db
+from utils.db_connection import connect_db, logger
 
 
 
@@ -38,6 +38,8 @@ def load_company_data(symbol:str):
             )
         )
         conn.commit()
+    except Exception as e:
+        logger.error(f"Error inserting data: {e}")
     finally:
         conn.close()
    
@@ -70,6 +72,8 @@ def load_daily_data(symbol:str):
             )
         )
         conn.commit()
+    except Exception as e:
+        logger.error(f"Error inserting data: {e}")
     finally:
         conn.close()
 
@@ -90,7 +94,7 @@ def periodic_data(symbol:str, period:str):
                     (SELECT id FROM companies where symbol=?),
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
-                ''',
+                '''.format(period, period, period, period, period, period),
                 (
                     symbol,
                     row['date'],
@@ -101,15 +105,17 @@ def periodic_data(symbol:str, period:str):
                     row.get('adj_close'),
                     row.get('volume'),
                     row.get('dividend_amt'),
-                    row.get('_range'),
-                    row.get('_return'),
-                    row.get('_price_chge'),
-                    row.get('_avg_price'),
-                    row.get('open_to_close_rt'),
-                    row.get('price_dir')
+                    row.get(period+'_range'),
+                    row.get(period+'_return'),
+                    row.get(period+'_price_chge'),
+                    row.get(period+'_avg_price'),
+                    row.get(period+'_open_to_close_rt'),
+                    row.get(period+'_price_dir')
                 )
             )
         conn.commit()
+    except Exception as e:
+        logger.error(f"Error inserting data: {e}")
     finally:
         conn.close()
 

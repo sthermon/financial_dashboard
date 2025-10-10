@@ -5,7 +5,6 @@ from data_ingestion.clean_data import clean_stock
 from utils.db_connection import connect_db, logger
 
 
-
 def load_company_data(symbol:str):
     
     quote = get_company_data(symbol)

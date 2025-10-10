@@ -66,17 +66,15 @@ def quote_historic_data(symbol:str, period:str):
     return response
     
     
-##TODO##  Complete the search box button  
     
 def company_check(symbol:str):
     '''Fuction that will query company information on url and will return a 
         set if possible matches to be displayed on main app. 
         Accepts a ticker text from the user interface
     '''
-    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol}
-    headers={'Authorization': f'Bearer {API_KEY}'}
+    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol, 'apikey':API_KEY}
     try:
-        response = requests.get(f'{API_URL}/', params=parameters, headers=headers)
+        response = requests.get(f'{API_URL}/', params=parameters)
         response.raise_for_status()
         
     except requests.RequestException:
@@ -84,11 +82,8 @@ def company_check(symbol:str):
     
     try:
         result = response.json()
-        return {
-            'name': result['name'],
-            'symbol': result['symbol'],
-            'match': result['matchScore']
-        }
+        return result
     
-    except (KeyError, TypeError, ValueError):
+    except requests.RequestException as e:
+        logger.error(f'API request failed: {e}')
         return 'Not found'

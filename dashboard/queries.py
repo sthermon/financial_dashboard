@@ -1,15 +1,38 @@
+from collections import namedtuple
 import requests
 import pandas as pd
-import streamlit as st
-import numpy as np
 from data_ingestion.fetch_data import company_check
 from utils.db_connection import logger
 
-## TODO ##
-'''Update function to pull information from the fetch file'''
 
-query = company_check(symbol)
+def submit_inquiry(symbol:str):
+    '''
+        Function that receives the user entry and calls an API to receive the most relevant results
+        extract the name, symbol and sort the score returning a list.
+    '''
     
+    inquiry = company_check(symbol)
+    
+    Match = namedtuple('Match'['symbol', 'name', 'score'])
+    try:
+        bestmatches = inquiry.get('bestMatches', [])
+        matches = [
+            Match(
+            match['2. name'],
+            match['1. symbol'],
+            float(match['9. matchScore'])
+        )
+        for match in bestmatches
+        ]
+        sorted_matches = sorted(matches, lambda x: x.score, reverse=True)
+            
+            
+    except requests.RequestException as e:
+        logger.error(f'Search failed: {e}')
+        return 'Unable to complete'
+        
+    return sorted_matches
+
 
 
 '''Code example'''

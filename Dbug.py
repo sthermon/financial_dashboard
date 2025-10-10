@@ -1,7 +1,7 @@
 
 import sys
 import requests
-
+from collections import namedtuple
 
 def get_company_data(symbol:str, URL, API='13ULB7TGS4UJYQFH'):
     '''
@@ -25,77 +25,95 @@ def get_company_data(symbol:str, URL, API='13ULB7TGS4UJYQFH'):
         
     except (KeyError, TypeError, ValueError):
         return None
-    
-    df[frequency+'_range'] = df['High'] - df['Low']
-    df[frequency+'_return'] = df['Adj_close'].pct_change() *100
-    df[frequency+'_price_change'] = (df['Close'] - df['Open'])/df['Open'] * 100
-    df[frequency+'_avg_price'] = (df['High'] + df['Low'] + df['Close']) / 3
-    df['Open_to_close_ratio'] = df['Open'] / df['Close']
-    df['Price_direction'] = df.apply(lambda row: 'down' if row['Close'] < row['Open'] else 'up', axis=1)
 
-# replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+
+
+
 #url = 'https://www.alphavantage.co/query?function=IVERVIEW&tickers=AAPL&topics=financial_markets&apikey=13ULB7TGS4UJYQFH'
 url = 'https://www.alphavantage.co/query?&apikey=13ULB7TGS4UJYQFH'
 #url = 'https://www.alphavantage.co/query?'
 ticker = 'NVDA'
 
-sample = get_company_data(ticker, url)
 
-
-def return_frq(period:str):
-    
-    time_list = ['TIME_SERIES_MONTHLY_ADJUSTED', 'TIME_SERIES_WEEKLY_ADJUSTED']
-    frequency = time_list[0] if period == 'monthly' else time_list[1]
-    
-    # if period == 'monthly':
-    #     'TIME_SERIES_MONTHLY_ADJUSTED'
-    # elif period == 'weekly':
-    #     'TIME_SERIES_WEEKLY_ADJUSTED'
-    return frequency
-    
-    
-print(return_frq('weekly'))    
-
-
-
+# 925F1XGY0PDX1AK0
+URL_KEY = 'https://www.alphavantage.co/query?&apikey=13ULB7TGS4UJYQFH'
 
 'https://www.exampleurl.com/query?function=OVERVIEW&symbol=AAPL&apikey=demo'
 
-# print(sample)
 
+def company_check(symbol:str):
+    '''Fuction that will query company information on url and will return a 
+        set if possible matches to be displayed on main app. 
+        Accepts a ticker text from the user interface
+    '''
+    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol}
+    try:
+        response = requests.get(URL_KEY, params=parameters)
+        response.raise_for_status()
+        
+    except requests.RequestException:
+        return None
+    
+    try:
+        result = response.json()
+        return result
+        # return {
+        #     'name': result['name'],
+        #     'symbol': result['symbol'],
+        #     'match': result['matchScore']
+        # }
+    
+    except (KeyError, TypeError, ValueError):
+        return 'Not found'
+
+# query = company_check('Apple')
+
+# results = []
+
+# for fields in query:
+    
+# query.get('bestMatches', {}).get()
+
+# rl = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=NVDA&apikey=13ULB7TGS4UJYQFH'
+
+
+
+reslt = {'bestMatches': [{'1. symbol': 'IBM', '2. name': 'International Business Machines Corp', '3. type': 'Equity', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', '9. matchScore': '1.0000'}, {'1. symbol': 'IBMN', '2. name': 'ISHARES IBONDS DEC 2025 TERM MUNIBOND ETF ', '3. type': 'ETF', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', '9. matchScore': '0.8571'}, {'1. symbol': 'IBMO', '2. name': 'ISHARES IBONDS DEC 2026 TERM MUNI BOND ETF ', '3. type': 'ETF', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', '9. matchScore': '0.8571'}, {'1. symbol': 'IBMP', '2. name': 'ISHARES IBONDS DEC 2027 TERM MUNI BOND ETF ', '3. type': 'ETF', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', 
+'9. matchScore': '0.8571'}, {'1. symbol': 'IBMQ', '2. name': 'ISHARES IBONDS DEC 2028 TERM MUNI BOND ETF ', '3. type': 'ETF', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', '9. matchScore': '0.8571'}, {'1. symbol': 'IBMR', '2. name': 'ISHARES IBONDS DEC 2029 TERM MUNI BOND ETF ', '3. type': 'ETF', '4. region': 'United States', '5. marketOpen': '09:30', '6. marketClose': '16:00', '7. timezone': 'UTC-04', '8. currency': 'USD', '9. matchScore': '0.8571'}, {'1. symbol': 'IBM.FRK', '2. name': 'International Business Machines', '3. type': 'Equity', '4. region': 'Frankfurt', '5. marketOpen': '08:00', '6. marketClose': '20:00', '7. timezone': 'UTC+02', '8. currency': 'EUR', 
+'9. matchScore': '0.7500'}, {'1. symbol': 'IBM.DEX', '2. name': 'International Business Machines', '3. type': 'Equity', '4. region': 'XETRA', '5. marketOpen': '08:00', '6. marketClose': '20:00', '7. timezone': 'UTC+02', '8. currency': 'EUR', '9. matchScore': '0.6667'}, {'1. symbol': 'IBM0.FRK', '2. name': 'IBM CDR', '3. type': 'Equity', '4. region': 'Frankfurt', '5. marketOpen': '08:00', '6. marketClose': '20:00', '7. timezone': 'UTC+02', '8. currency': 'EUR', '9. matchScore': '0.6667'}, {'1. symbol': 'IBMB34.SAO', '2. name': 'International Business Machines Corp', '3. type': 'Equity', '4. region': 'Brazil/Sao Paolo', '5. marketOpen': '10:00', '6. marketClose': '17:30', '7. timezone': 'UTC-03', '8. currency': 'BRL', '9. matchScore': '0.5000'}]}
+
+# extract = reslt.get('bestMatches', {}).get('9. matchScore')
+# print(len(reslt.get('bestMatches')))
+# print(reslt.get('bestMatches')[0].get('9. matchScore'))
+
+
+SearchResults = namedtuple('SearchResult',['symbol', 'name', 'matchscore'])
+
+matches = reslt.get('bestMatches', [])
+resul_list = []
+for match in matches:
+    company_symbol = match['1. symbol']
+    company_name = match['2. name']
+    search_score = match['9. matchScore']
+    query = SearchResults(company_symbol, company_name, search_score)
+    resul_list.append(query)
+    # resul_list.sort()
+    
+print(resul_list[0].matchscore)
+# print(getattr(resul_list, 'matchscore'))
+
+# (('symbol'['name','score']), ('symbol'['name','score']))
+# response = requests.get(rl)
+# data = response.json()
+# print(data)
+
+# print(sample)
 
 #{'Symbol': 'AAPL', 'Name': 'Apple Inc', 'Exchange': 'NASDAQ', 'Sector': 'TECHNOLOGY', 
 # 'DividendPerShare': '1.01', 'DividendYield': '0.0039', 'EPS': '6.59', '52WeekHigh': '259.18', 
 # '52WeekLow': '168.8', '50DayMovingAverage': '228.45', '200DayMovingAverage': '221.97', 
 # 'FiscalYearEnd': 'September', 'LatestQuarter': '2025-06-30', 'DividendDate': '2025-08-14', 
 # 'ExDividendDate': '2025-08-11'}
-
-
-def load_financial_data(df, ticker):
-    conn = get_connection()
-    conn.execute("INSERT OR IGNORE INTO companies (ticker, name) VALUES (?, ?)", (ticker, ticker))
-
-    for _, row in df.iterrows():
-        conn.execute("""
-            INSERT INTO financial_metrics
-            (company_id, date, revenue, profit, profit_margin, revenue_growth)
-            VALUES (
-                (SELECT id FROM companies WHERE ticker=?),
-                ?, ?, ?, ?, ?
-            )
-        """, (
-            ticker,
-            row["date"],
-            row["revenue"],
-            row["profit"],
-            row["profit_margin"],
-            row["revenue_growth"]
-        ))
-
-    conn.commit()
-    conn.close()
-
-
 
 
 # {'Global Quote': 

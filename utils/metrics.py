@@ -4,7 +4,6 @@ import pandas as pd
 
 def price_metrics(df, period:str):
 
-    df = pd.read_csv(df)
     df[period+'_range'] = df['high'] - df['low']
     df[period+'_return'] = df['adj_close'].pct_change() *100
     df[period+'_price_chge'] = (df['close'] - df['open'])/df['open'] * 100

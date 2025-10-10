@@ -28,8 +28,8 @@ def reshape_data(df, period):
     '''
         Function that renames colums from a Dataframe and merges calculated metrics
     '''
-    n_columns = {'date': 'date', 'open': 'open', 'high': 'high', 'low': 'low', 'close': 'close', 
-                 'adj_close': 'adj_close', 'volume': 'volume', 'dividend_amt': 'dividend_amt'}
+    n_columns = {'timestamp': 'date', 'open': 'open', 'high': 'high', 'low': 'low', 'close': 'close', 
+                 'adjusted close': 'adj_close', 'volume': 'volume', 'dividend amount': 'dividend_amt'}
     data = df.rename(columns = n_columns)
     update_data = price_metrics(data, period)
     

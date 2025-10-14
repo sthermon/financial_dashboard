@@ -1,5 +1,5 @@
 import streamlit as st
-# from streamlit_searchbox import st_searchbox
+from streamlit_searchbox import st_searchbox
 from dashboard.queries import get_company_info
 from data_ingestion.fetch_data import get_company_info, rank_results
 from data_ingestion.clean_data import clean_stock

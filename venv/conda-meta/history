@@ -132,3 +132,12 @@
 +defaults/win-64::yaml-0.2.5-he774522_0
 +defaults/win-64::zstd-1.5.7-h56299aa_0
 # update specs: ['bokeh', 'requests', 'streamlit']
+==> 2025-10-10 20:22:49 <==
+# cmd: D:\anaconda3\Scripts\conda-script.py install rapidfuzz
+# conda version: 24.11.3
+-defaults/win-64::certifi-2025.8.3-py312haa95532_0
+-defaults/win-64::openssl-3.0.17-h35632f6_0
++defaults/win-64::certifi-2025.10.5-py312haa95532_0
++defaults/win-64::openssl-3.0.18-h543e019_0
++defaults/win-64::rapidfuzz-3.14.1-py312h885b0b7_0
+# update specs: ['rapidfuzz']

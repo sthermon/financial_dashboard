@@ -7,6 +7,29 @@ API_KEY = st.secrets['api']['key']
 API_URL = st.secrets['api']['url']
 
 
+@st.cache_data(show_spinner=False)
+def company_check(symbol:str):
+    '''Fuction that will query company information on url and will return a 
+        set if possible matches to be displayed on main app. 
+        Accepts a ticker text from the user interface
+    '''
+    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol, 'apikey':API_KEY}
+    try:
+        response = requests.get(f'{API_URL}/', params=parameters)
+        response.raise_for_status()
+        
+    except requests.RequestException:
+        return None
+    
+    try:
+        result = response.json()
+        return result
+    
+    except requests.RequestException as e:
+        logger.error(f'API request failed: {e}')
+        return 'Not found'
+    
+    
 def get_company_data(symbol:str):
     '''
         Function that will pull company information in json format and will select main interest points
@@ -66,24 +89,3 @@ def quote_historic_data(symbol:str, period:str):
     return response
     
     
-    
-def company_check(symbol:str):
-    '''Fuction that will query company information on url and will return a 
-        set if possible matches to be displayed on main app. 
-        Accepts a ticker text from the user interface
-    '''
-    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol, 'apikey':API_KEY}
-    try:
-        response = requests.get(f'{API_URL}/', params=parameters)
-        response.raise_for_status()
-        
-    except requests.RequestException:
-        return None
-    
-    try:
-        result = response.json()
-        return result
-    
-    except requests.RequestException as e:
-        logger.error(f'API request failed: {e}')
-        return 'Not found'

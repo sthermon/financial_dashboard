@@ -2,29 +2,31 @@
 import sys
 import requests
 from collections import namedtuple
+from rapidfuzz import process
 
-def get_company_data(symbol:str, URL, API='13ULB7TGS4UJYQFH'):
-    '''
-        Function that will pull company information in json format and will select main interest points
-        to select and store in database
-    '''
-    payload = {'symbol':symbol, 'function':'OVERVIEW'}
-    try:
-        response = requests.get(f'{URL}/', params=payload)
-        response.raise_for_status()
-        
-    except requests.RequestException:
-        return None
 
-    try:
-        dossier = response.json()
-        key_info = ['Symbol', 'Name', 'Exchange', 'Sector', 'DividendPerShare', 'DividendYield', 'EPS', '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage','FiscalYearEnd', 'LatestQuarter', 'DividendDate', 'ExDividendDate']
-        return {
-            key: dossier[key] for key in key_info if key in dossier
-        }
+# def get_company_data(symbol:str, URL, API='13ULB7TGS4UJYQFH'):
+#     '''
+#         Function that will pull company information in json format and will select main interest points
+#         to select and store in database
+#     '''
+#     payload = {'symbol':symbol, 'function':'OVERVIEW'}
+#     try:
+#         response = requests.get(f'{URL}/', params=payload)
+#         response.raise_for_status()
         
-    except (KeyError, TypeError, ValueError):
-        return None
+#     except requests.RequestException:
+#         return None
+
+#     try:
+#         dossier = response.json()
+#         key_info = ['Symbol', 'Name', 'Exchange', 'Sector', 'DividendPerShare', 'DividendYield', 'EPS', '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage','FiscalYearEnd', 'LatestQuarter', 'DividendDate', 'ExDividendDate']
+#         return {
+#             key: dossier[key] for key in key_info if key in dossier
+#         }
+        
+#     except (KeyError, TypeError, ValueError):
+#         return None
 
 
 
@@ -41,30 +43,30 @@ URL_KEY = 'https://www.alphavantage.co/query?&apikey=13ULB7TGS4UJYQFH'
 'https://www.exampleurl.com/query?function=OVERVIEW&symbol=AAPL&apikey=demo'
 
 
-def company_check(symbol:str):
-    '''Fuction that will query company information on url and will return a 
-        set if possible matches to be displayed on main app. 
-        Accepts a ticker text from the user interface
-    '''
-    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol}
-    try:
-        response = requests.get(URL_KEY, params=parameters)
-        response.raise_for_status()
+# def company_check(symbol:str):
+#     '''Fuction that will query company information on url and will return a 
+#         set if possible matches to be displayed on main app. 
+#         Accepts a ticker text from the user interface
+#     '''
+#     parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol}
+#     try:
+#         response = requests.get(URL_KEY, params=parameters)
+#         response.raise_for_status()
         
-    except requests.RequestException:
-        return None
+#     except requests.RequestException:
+#         return None
     
-    try:
-        result = response.json()
-        return result
-        # return {
-        #     'name': result['name'],
-        #     'symbol': result['symbol'],
-        #     'match': result['matchScore']
-        # }
+#     try:
+#         result = response.json()
+#         return result
+#         # return {
+#         #     'name': result['name'],
+#         #     'symbol': result['symbol'],
+#         #     'match': result['matchScore']
+#         # }
     
-    except (KeyError, TypeError, ValueError):
-        return 'Not found'
+#     except (KeyError, TypeError, ValueError):
+#         return 'Not found'
 
 # query = company_check('Apple')
 
@@ -87,20 +89,58 @@ reslt = {'bestMatches': [{'1. symbol': 'IBM', '2. name': 'International Business
 # print(reslt.get('bestMatches')[0].get('9. matchScore'))
 
 
-SearchResults = namedtuple('SearchResult',['symbol', 'name', 'matchscore'])
+# SearchResults = namedtuple('SearchResult',['symbol', 'name', 'matchscore'])
 
-matches = reslt.get('bestMatches', [])
-resul_list = []
-for match in matches:
-    company_symbol = match['1. symbol']
-    company_name = match['2. name']
-    search_score = match['9. matchScore']
-    query = SearchResults(company_symbol, company_name, search_score)
-    resul_list.append(query)
-    # resul_list.sort()
+# matches = reslt.get('bestMatches', [])
+# resul_list = []
+# for match in matches:
+#     company_symbol = match['1. symbol']
+#     company_name = match['2. name']
+#     search_score = match['9. matchScore']
+#     query = SearchResults(company_symbol, company_name, search_score)
+#     resul_list.append(query)
+#     # resul_list.sort()
     
-print(resul_list[0].matchscore)
-# print(getattr(resul_list, 'matchscore'))
+def get_company_info(symbol:str, result):
+    '''
+        Function that receives the user entry and calls an API to receive the most relevant results
+        extract the name, symbol and sort the score returning a list.
+    '''
+    
+    inquiry = result
+    Match = namedtuple('Match', ['symbol', 'name', 'score'])
+    try:
+        bestmatches = inquiry.get('bestMatches', [])
+        matches = [
+            Match(
+            match['1. symbol'],
+            match['2. name'],
+            float(match['9. matchScore'])
+        )
+        for match in bestmatches
+        ]
+        sorted_matches = sorted(matches, key=lambda x: x.score, reverse=True)
+            
+    except requests.RequestException as e:
+        # logger.error(f'Search failed: {e}')
+        return 'Unable to complete'
+        
+    print(f'sorted matches are as follow: /n {sorted_matches}')
+    print('*'*100)
+    filtered = rank_results(symbol, sorted_matches)
+    return filtered
+
+
+def rank_results(symbol:str, matches, limit=4):
+    
+    ranked = process.extract(symbol, matches, limit=limit)    
+    if not matches:
+        return []
+    print(ranked[2][0])
+    return ranked
+    
+print(get_company_info('ibm', reslt))
+
 
 # (('symbol'['name','score']), ('symbol'['name','score']))
 # response = requests.get(rl)

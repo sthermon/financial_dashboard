@@ -1,5 +1,5 @@
 {
-  "build": "h35632f6_0",
+  "build": "h543e019_0",
   "build_number": 0,
   "channel": "https://repo.anaconda.com/pkgs/main/win-64",
   "constrains": [],
@@ -9,7 +9,7 @@
     "vc >=14.2,<15",
     "vc14_runtime >=14.29.30133"
   ],
-  "extracted_package_dir": "D:\\anaconda3\\pkgs\\openssl-3.0.17-h35632f6_0",
+  "extracted_package_dir": "D:\\anaconda3\\pkgs\\openssl-3.0.18-h543e019_0",
   "files": [
     "Library/bin/c_rehash.pl",
     "Library/bin/libcrypto-3-x64.dll",
@@ -174,74 +174,74 @@
     "etc/conda/deactivate.d/openssl_deactivate.ps1",
     "etc/conda/deactivate.d/openssl_deactivate.sh"
   ],
-  "fn": "openssl-3.0.17-h35632f6_0.conda",
+  "fn": "openssl-3.0.18-h543e019_0.conda",
   "license": "Apache-2.0",
   "link": {
-    "source": "D:\\anaconda3\\pkgs\\openssl-3.0.17-h35632f6_0",
+    "source": "D:\\anaconda3\\pkgs\\openssl-3.0.18-h543e019_0",
     "type": 1
   },
-  "md5": "d058f636337d1606c03e430e416c925f",
+  "md5": "d68f698bb2e9ea94b2db5b6d00b3eae5",
   "name": "openssl",
-  "package_tarball_full_path": "D:\\anaconda3\\pkgs\\openssl-3.0.17-h35632f6_0.conda",
+  "package_tarball_full_path": "D:\\anaconda3\\pkgs\\openssl-3.0.18-h543e019_0.conda",
   "paths_data": {
     "paths": [
       {
         "_path": "Library/bin/c_rehash.pl",
         "file_mode": "text",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:\\\\b\\\\abs_6cl6y8nskc\\\\croot\\\\openssl_1753176364202\\\\_h_env",
-        "sha256": "d3bf607ce8790790bb809c81853554353aa6b7770ce9d199ff3b0a3c175a6436",
-        "sha256_in_prefix": "57022a1e6aa0c4e5240de6a77f0950a672e8bf4eb2504c092b21a703c6867187",
-        "size_in_bytes": 7321
+        "prefix_placeholder": "C:\\\\miniconda3\\\\conda-bld\\\\openssl_1759488976042\\\\_h_env",
+        "sha256": "dd9069600315dda982c3f57a47b9a750eb18f21917714281d3e9720165153413",
+        "sha256_in_prefix": "0e6cf18b0504a69543f28b1349924bc7aaa6f68caaa8d03e529a6bdf818d7247",
+        "size_in_bytes": 7316
       },
       {
         "_path": "Library/bin/libcrypto-3-x64.dll",
         "file_mode": "binary",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:\\b\\abs_6cl6y8nskc\\croot\\openssl_1753176364202\\_h_env",
-        "sha256": "2f8f0fc6cd3dce9b5f985a90faaa7363767e8db4e71c7fdf4e80cd42d9c3a7d2",
-        "sha256_in_prefix": "2f8f0fc6cd3dce9b5f985a90faaa7363767e8db4e71c7fdf4e80cd42d9c3a7d2",
-        "size_in_bytes": 5295944
+        "prefix_placeholder": "C:\\miniconda3\\conda-bld\\openssl_1759488976042\\_h_env",
+        "sha256": "2124998938de36d25dfa32adc8ffcdb324eac0cc98552a160a08e41f17aade9a",
+        "sha256_in_prefix": "2124998938de36d25dfa32adc8ffcdb324eac0cc98552a160a08e41f17aade9a",
+        "size_in_bytes": 5297992
       },
       {
         "_path": "Library/bin/libcrypto-3-x64.pdb",
         "file_mode": "binary",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:\\\\b\\\\abs_6cl6y8nskc\\\\croot\\\\openssl_1753176364202\\\\_h_env",
-        "sha256": "978430fe6d70e156832a387276c6ddd2f9ded583ceffc78b27c38d12ce49417f",
-        "sha256_in_prefix": "978430fe6d70e156832a387276c6ddd2f9ded583ceffc78b27c38d12ce49417f",
-        "size_in_bytes": 16044032
+        "prefix_placeholder": "C:\\\\miniconda3\\\\conda-bld\\\\openssl_1759488976042\\\\_h_env",
+        "sha256": "b11eed65e175d47ea1c868aa0e815b98f12ddeb0a9e6cb58cd48ef97595cc4a4",
+        "sha256_in_prefix": "b11eed65e175d47ea1c868aa0e815b98f12ddeb0a9e6cb58cd48ef97595cc4a4",
+        "size_in_bytes": 16060416
       },
       {
         "_path": "Library/bin/libssl-3-x64.dll",
         "path_type": "hardlink",
-        "sha256": "0e34e725e8b40788fe25aeb600c9af8a0cf210f6a1798089959f22f0c188ee11",
-        "sha256_in_prefix": "0e34e725e8b40788fe25aeb600c9af8a0cf210f6a1798089959f22f0c188ee11",
+        "sha256": "a0d26c33b88d139f85a98ccd5dd583cbdf55392d0f6ed2bd6d6425bdc7382c8d",
+        "sha256_in_prefix": "a0d26c33b88d139f85a98ccd5dd583cbdf55392d0f6ed2bd6d6425bdc7382c8d",
         "size_in_bytes": 789320
       },
       {
         "_path": "Library/bin/libssl-3-x64.pdb",
         "file_mode": "binary",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:\\\\b\\\\abs_6cl6y8nskc\\\\croot\\\\openssl_1753176364202\\\\_h_env",
-        "sha256": "e682452bdefe6c76616e798111a85ff05ffa321f155be8d8256f91a703daeddf",
-        "sha256_in_prefix": "e682452bdefe6c76616e798111a85ff05ffa321f155be8d8256f91a703daeddf",
-        "size_in_bytes": 2887680
+        "prefix_placeholder": "C:\\\\miniconda3\\\\conda-bld\\\\openssl_1759488976042\\\\_h_env",
+        "sha256": "e0c0f430666eb16ed849780832321f49bce216ef1bf5e48f54dcbbaa808310c2",
+        "sha256_in_prefix": "e0c0f430666eb16ed849780832321f49bce216ef1bf5e48f54dcbbaa808310c2",
+        "size_in_bytes": 2879488
       },
       {
         "_path": "Library/bin/openssl.exe",
         "path_type": "hardlink",
-        "sha256": "ee0ef52b8c8cc7acde24062bd7afb17b4e8360b89a716f2fdb9fec8e25280a95",
-        "sha256_in_prefix": "ee0ef52b8c8cc7acde24062bd7afb17b4e8360b89a716f2fdb9fec8e25280a95",
-        "size_in_bytes": 733000
+        "sha256": "2e081772a6cf076e43cd9a1fda5f26cfe5dd55d3e11dd1019081da4878c8ea5b",
+        "sha256_in_prefix": "2e081772a6cf076e43cd9a1fda5f26cfe5dd55d3e11dd1019081da4878c8ea5b",
+        "size_in_bytes": 733512
       },
       {
         "_path": "Library/bin/openssl.pdb",
         "file_mode": "binary",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:\\\\b\\\\abs_6cl6y8nskc\\\\croot\\\\openssl_1753176364202\\\\_h_env",
-        "sha256": "bd12f8945e62ef2e0906e91bbc10baa379d36acf50c69ac10b459ab29932f436",
-        "sha256_in_prefix": "bd12f8945e62ef2e0906e91bbc10baa379d36acf50c69ac10b459ab29932f436",
+        "prefix_placeholder": "C:\\\\miniconda3\\\\conda-bld\\\\openssl_1759488976042\\\\_h_env",
+        "sha256": "1d930ef4fe510ad4ba46275cf865f8f056efb65ed7e29bbcf7f957d91058dc57",
+        "sha256_in_prefix": "1d930ef4fe510ad4ba46275cf865f8f056efb65ed7e29bbcf7f957d91058dc57",
         "size_in_bytes": 3067904
       },
       {
@@ -856,9 +856,9 @@
       {
         "_path": "Library/include/openssl/opensslv.h",
         "path_type": "hardlink",
-        "sha256": "48388314a976be3d1f5ec6a864e7800b97a06a868646d0003b72bf0840eddaa5",
-        "sha256_in_prefix": "48388314a976be3d1f5ec6a864e7800b97a06a868646d0003b72bf0840eddaa5",
-        "size_in_bytes": 3302
+        "sha256": "98c6a63d2702d3d5bdb3ed279a1f87b5ffd7f50ca92512e7794c11010b073b8a",
+        "sha256_in_prefix": "98c6a63d2702d3d5bdb3ed279a1f87b5ffd7f50ca92512e7794c11010b073b8a",
+        "size_in_bytes": 3136
       },
       {
         "_path": "Library/include/openssl/ossl_typ.h",
@@ -884,9 +884,9 @@
       {
         "_path": "Library/include/openssl/pem.h",
         "path_type": "hardlink",
-        "sha256": "9ae49f961842fa3e2e76ea796e48b2a984e2a66dc0c266a52d01ac7bab5bd9f1",
-        "sha256_in_prefix": "9ae49f961842fa3e2e76ea796e48b2a984e2a66dc0c266a52d01ac7bab5bd9f1",
-        "size_in_bytes": 25764
+        "sha256": "e24205c1c62ce024f93cd487b132f6c9a10f95308bf0e4b8000fea6ab95fdadd",
+        "sha256_in_prefix": "e24205c1c62ce024f93cd487b132f6c9a10f95308bf0e4b8000fea6ab95fdadd",
+        "size_in_bytes": 25867
       },
       {
         "_path": "Library/include/openssl/pem2.h",
@@ -1228,28 +1228,28 @@
         "_path": "Library/lib/pkgconfig/libcrypto.pc",
         "file_mode": "text",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:/b/abs_6cl6y8nskc/croot/openssl_1753176364202/_h_env",
-        "sha256": "b2e4319292b861955203427046a1c96c1d88141cd431747941bcffed813f004f",
-        "sha256_in_prefix": "0f0078f5737625c9cd5d753de12eb82242419014eb350e52339e256ebe7e1650",
-        "size_in_bytes": 325
+        "prefix_placeholder": "C:/miniconda3/conda-bld/openssl_1759488976042/_h_env",
+        "sha256": "662a827a668f1c8f7184072865599fd52f75b91a1becb3ceb851702f8d7b55a9",
+        "sha256_in_prefix": "c7132523df6d34d44c2080ecea645b7e4ef4cfb3f92a6ae517ff2d9d94b81e42",
+        "size_in_bytes": 332
       },
       {
         "_path": "Library/lib/pkgconfig/libssl.pc",
         "file_mode": "text",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:/b/abs_6cl6y8nskc/croot/openssl_1753176364202/_h_env",
-        "sha256": "e40547a49f332dc84ad8fcfadb2737f46b9605519d40140a2f457d751a941811",
-        "sha256_in_prefix": "a323415f9d96a13ba21f5b7ece44315e68800094c8565aa7cb085a7d49320123",
-        "size_in_bytes": 325
+        "prefix_placeholder": "C:/miniconda3/conda-bld/openssl_1759488976042/_h_env",
+        "sha256": "9124bd732b42263f94369794f065e418d66ba230a828d775345598b708cf63c7",
+        "sha256_in_prefix": "a5e4c492a71285d52ddacf6e908b465835b81d8c5390a9acf5af41c76da6fca7",
+        "size_in_bytes": 332
       },
       {
         "_path": "Library/lib/pkgconfig/openssl.pc",
         "file_mode": "text",
         "path_type": "hardlink",
-        "prefix_placeholder": "C:/b/abs_6cl6y8nskc/croot/openssl_1753176364202/_h_env",
-        "sha256": "001c1572c148f37a2b6d32ccd3477c8961bb9312d035090ea9ddf68283504565",
-        "sha256_in_prefix": "ee981bef9b0e393fd8c7f3ee72a5fe7bd187801e7a82d4a1024244bf5ad30477",
-        "size_in_bytes": 280
+        "prefix_placeholder": "C:/miniconda3/conda-bld/openssl_1759488976042/_h_env",
+        "sha256": "67d9276d3d64f6085b3e57ae1b01223d864bbf20a785df062a5e68e1f267bacf",
+        "sha256_in_prefix": "cb5f70e25d18b8329537bf7d9dda76ac80c249f36cf6d698dd6246da8207ec71",
+        "size_in_bytes": 285
       },
       {
         "_path": "Library/ssl/ct_log_list.cnf",
@@ -1268,16 +1268,16 @@
       {
         "_path": "Library/ssl/misc/CA.pl",
         "path_type": "hardlink",
-        "sha256": "b56a8bae010da99b49120a7030868280f9858bfb6b6b81f7847a20c79cff788d",
-        "sha256_in_prefix": "b56a8bae010da99b49120a7030868280f9858bfb6b6b81f7847a20c79cff788d",
-        "size_in_bytes": 13839
+        "sha256": "b479aa55fc7ef1de23e789c2b1441a8b431409a694d2b4358abdcc2fca000a1e",
+        "sha256_in_prefix": "b479aa55fc7ef1de23e789c2b1441a8b431409a694d2b4358abdcc2fca000a1e",
+        "size_in_bytes": 13837
       },
       {
         "_path": "Library/ssl/misc/tsget.pl",
         "path_type": "hardlink",
-        "sha256": "d5ed4c62f9396321a40476addc4ff2f666050ee72f123f82d0af9f2ac657d06e",
-        "sha256_in_prefix": "d5ed4c62f9396321a40476addc4ff2f666050ee72f123f82d0af9f2ac657d06e",
-        "size_in_bytes": 7005
+        "sha256": "d60fdba9bf15aa78ad1c5aee4270da6e8fa8853e8f80a0e07a2558aa5c5191c8",
+        "sha256_in_prefix": "d60fdba9bf15aa78ad1c5aee4270da6e8fa8853e8f80a0e07a2558aa5c5191c8",
+        "size_in_bytes": 7003
       },
       {
         "_path": "Library/ssl/openssl.cnf",
@@ -1296,53 +1296,53 @@
       {
         "_path": "etc/conda/activate.d/openssl_activate.bat",
         "path_type": "hardlink",
-        "sha256": "b5ec69ff3a2abead2e4141058c056fe89696ec6ff265db3a6e12d54a7b0cf968",
-        "sha256_in_prefix": "b5ec69ff3a2abead2e4141058c056fe89696ec6ff265db3a6e12d54a7b0cf968",
-        "size_in_bytes": 141
+        "sha256": "43b4181c029e3040629a182e4bd6ec14de0388140fdb97b865e120a08e79a7fa",
+        "sha256_in_prefix": "43b4181c029e3040629a182e4bd6ec14de0388140fdb97b865e120a08e79a7fa",
+        "size_in_bytes": 146
       },
       {
         "_path": "etc/conda/activate.d/openssl_activate.ps1",
         "path_type": "hardlink",
-        "sha256": "4faf38998848de897f3d1bf343b9ed4f3357f9be924ae3f39fa878e6eac4d990",
-        "sha256_in_prefix": "4faf38998848de897f3d1bf343b9ed4f3357f9be924ae3f39fa878e6eac4d990",
-        "size_in_bytes": 146
+        "sha256": "08a59fc89ed12a60046398fee3feb1395a7a6151458dc0e825cbf330c2ceee76",
+        "sha256_in_prefix": "08a59fc89ed12a60046398fee3feb1395a7a6151458dc0e825cbf330c2ceee76",
+        "size_in_bytes": 150
       },
       {
         "_path": "etc/conda/activate.d/openssl_activate.sh",
         "path_type": "hardlink",
-        "sha256": "0491ca20c6a5232c054965f317e9e867306315e777b611a94a02e8cfdfb66dbe",
-        "sha256_in_prefix": "0491ca20c6a5232c054965f317e9e867306315e777b611a94a02e8cfdfb66dbe",
-        "size_in_bytes": 158
+        "sha256": "e7ced4e32ac72d9e22516c9298a1ab6f3920c63b073212bc44687213b4ce9771",
+        "sha256_in_prefix": "e7ced4e32ac72d9e22516c9298a1ab6f3920c63b073212bc44687213b4ce9771",
+        "size_in_bytes": 162
       },
       {
         "_path": "etc/conda/deactivate.d/openssl_deactivate.bat",
         "path_type": "hardlink",
-        "sha256": "66ccd7108ea8c1718f60ae81f07794f48a8c4cb3f5ab1dd2a8a17484991afdcb",
-        "sha256_in_prefix": "66ccd7108ea8c1718f60ae81f07794f48a8c4cb3f5ab1dd2a8a17484991afdcb",
-        "size_in_bytes": 120
+        "sha256": "479a036b5976d123e8821a93eb1997a6c54e0139b535a3f056ca36ca933bbc0e",
+        "sha256_in_prefix": "479a036b5976d123e8821a93eb1997a6c54e0139b535a3f056ca36ca933bbc0e",
+        "size_in_bytes": 125
       },
       {
         "_path": "etc/conda/deactivate.d/openssl_deactivate.ps1",
         "path_type": "hardlink",
-        "sha256": "d3c530cac4c25c2cdd70a1db5eb2078ee66c1a7e9af0b7d972fec7d22bcdc112",
-        "sha256_in_prefix": "d3c530cac4c25c2cdd70a1db5eb2078ee66c1a7e9af0b7d972fec7d22bcdc112",
-        "size_in_bytes": 150
+        "sha256": "a4700eeaf4d3980a747644ae1e75d2381cd5fce9525a5c65802ce1c3f8f8dac5",
+        "sha256_in_prefix": "a4700eeaf4d3980a747644ae1e75d2381cd5fce9525a5c65802ce1c3f8f8dac5",
+        "size_in_bytes": 154
       },
       {
         "_path": "etc/conda/deactivate.d/openssl_deactivate.sh",
         "path_type": "hardlink",
-        "sha256": "1a597cfb46c521b4dfc99ace069b32045c516421f3e83f76587871f85f29c272",
-        "sha256_in_prefix": "1a597cfb46c521b4dfc99ace069b32045c516421f3e83f76587871f85f29c272",
-        "size_in_bytes": 126
+        "sha256": "0fefa3ca1c8ccd7ce478f9eb8e681d17706b66d21024b3f0f611d2594410d204",
+        "sha256_in_prefix": "0fefa3ca1c8ccd7ce478f9eb8e681d17706b66d21024b3f0f611d2594410d204",
+        "size_in_bytes": 130
       }
     ],
     "paths_version": 1
   },
   "requested_spec": "None",
-  "sha256": "e6404e49834ded17306bb2ddd74945f0db3dd18f65860063a8230e9990692ba8",
-  "size": 8207005,
+  "sha256": "ccf96c9ffe36ba2a525b5834d4068b95da37db4d8d3a7dd492633a6e253e8189",
+  "size": 7170496,
   "subdir": "win-64",
-  "timestamp": 1753178969000,
-  "url": "https://repo.anaconda.com/pkgs/main/win-64/openssl-3.0.17-h35632f6_0.conda",
-  "version": "3.0.17"
+  "timestamp": 1759490461000,
+  "url": "https://repo.anaconda.com/pkgs/main/win-64/openssl-3.0.18-h543e019_0.conda",
+  "version": "3.0.18"
 }

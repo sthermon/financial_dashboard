@@ -4,5 +4,3 @@ numpy
 streamlit_searchbox
 rapidfuzz
 requests
-sqlite3
-collections

@@ -1,7 +1,7 @@
 import pandas as pd
-from fetch_data import quote_historic_data
-from utils.metrics import price_metrics
-from utils.db_connection import logger
+from data_ingestion import quote_historic_data
+from utils import price_metrics
+from utils import logger
 
 
 def clean_stock(symbol, period:str):

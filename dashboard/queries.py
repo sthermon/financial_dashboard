@@ -2,8 +2,8 @@ from collections import namedtuple
 import requests
 import pandas as pd
 from rapidfuzz import process
-from data_ingestion.fetch_data import company_check
-from utils.db_connection import logger
+from data_ingestion import company_check
+from utils import logger
 
 
 def get_company_info(symbol:str):

@@ -209,3 +209,4 @@ __marimo__/
 # Streamlit
 secrets.toml
 Dbug.py
+.Streamlit

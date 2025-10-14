@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_searchbox import st_searchbox
-from dashboard.queries import get_company_info
+from dashboard import get_company_info
 from data_ingestion import get_company_info, rank_results
 from data_ingestion import clean_stock
 from data_ingestion import load_financial_data

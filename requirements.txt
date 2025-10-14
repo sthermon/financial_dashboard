@@ -1,8 +1,6 @@
 streamlit
 pandas
 numpy
-streamlit-searchbox
-st_searchbox
 streamlit_searchbox
 rapidfuzz
 requests

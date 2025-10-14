@@ -7,7 +7,7 @@ from data_ingestion.load_data import load_financial_data
 
 st.title("📈 Financial Dashboard")
 
-ticker = st.st_searchbox("Enter a company ticker:", "AAPL")
+ticker = st_searchbox("Enter a company ticker:", "AAPL")
 
 def search_company(searchterm):
     

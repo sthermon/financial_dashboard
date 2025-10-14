@@ -1,9 +1,9 @@
 import streamlit as st
 from streamlit_searchbox import st_searchbox
 from dashboard.queries import get_company_info
-from data_ingestion.fetch_data import get_company_info, rank_results
-from data_ingestion.clean_data import clean_stock
-from data_ingestion.load_data import load_financial_data
+from data_ingestion import get_company_info, rank_results
+from data_ingestion import clean_stock
+from data_ingestion import load_financial_data
 
 st.title("📈 Financial Dashboard")
 

@@ -1,13 +1,13 @@
 import pandas as pd
 import sqlite3
-from data_ingestion import get_company_data, quote_data, quote_historic_data
+from data_ingestion import pull_company_data, quote_data, quote_historic_data
 from data_ingestion import clean_stock
 from utils import connect_db, logger
 
 
 def load_company_data(symbol:str):
     
-    quote = get_company_data(symbol)
+    quote = pull_company_data(symbol)
     conn = connect_db()
     try:
         conn.execute(

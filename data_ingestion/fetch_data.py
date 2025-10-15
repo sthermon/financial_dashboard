@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from utils import logger
+from utils.db_connection import logger
 
 
 API_KEY = st.secrets['api']['key']
@@ -30,7 +30,7 @@ def company_check(symbol:str):
         return 'Not found'
     
     
-def get_company_data(symbol:str):
+def pull_company_data(symbol:str):
     '''
         Function that will pull company information in json format and will select main interest points
         to select and store in database

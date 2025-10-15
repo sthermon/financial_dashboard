@@ -1,6 +1,6 @@
 import numpy as np
-import pandas_ta as ta
-# import pandas as pd
+import pandas as pd
+# import pandas_ta as ta
 
 def price_metrics(df, period:str):
 

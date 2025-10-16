@@ -1,7 +1,7 @@
 from collections import namedtuple
 import requests
 import pandas as pd
-from rapidfuzz import process
+from rapidfuzz import process, fuzz
 from data_ingestion import company_check
 from utils import logger
 
@@ -34,10 +34,14 @@ def get_company_info(symbol:str):
     return sorted_matches
 
 
-def rank_results(symbol:str, matches, limit=5):
+def process_results(symbol:str, matches:list, key='name'):
     
     if not matches:
-        return []
-    ranked = process.extract(symbol, matches, limit=limit)
+        return None, 0    
     
-    return ranked
+    best_match, score, _ = process.extractOne(symbol, matches, scorer=fuzz.WRatio)
+    
+    matched_search = next((v for v in matches if v in [key] == best_match), None)
+    
+    return matched_search, score
+

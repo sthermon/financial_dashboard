@@ -1,1 +1,1 @@
-from dashboard.queries import get_company_info, rank_results
+from dashboard.queries import get_company_info, process_results

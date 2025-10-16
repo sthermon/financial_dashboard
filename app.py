@@ -21,7 +21,7 @@ if query:
         
         # st.table(result)
         st.write(best_match)
-        st.wrote(score)
+        st.write(score)
         
         if best_match and score > 70:
             st.success(f'✅ Found {query} in database.')

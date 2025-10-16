@@ -19,9 +19,9 @@ if query:
         result = search_button(query)
         best_match, score = process_results(query, result)
         
-        st.table(result)
-        st.dialog(best_match)
-        st.dialog(score)
+        # st.table(result)
+        st.write(best_match)
+        st.wrote(score)
         
         if best_match and score > 70:
             st.success(f'✅ Found {query} in database.')

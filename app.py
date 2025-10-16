@@ -19,19 +19,20 @@ if query:
         result = search_button(query)
         best_match, score = process_results(query, result)
         
-        try:
-            if best_match and score > 70:
-                st.success(f'✅ Found {query} in database.')
-                st.spinner('Loading company data')
+        st.table(result)
+        st.dialog(best_match)
+        st.dialog(score)
+        
+        if best_match and score > 70:
+            st.success(f'✅ Found {query} in database.')
+            st.spinner('Loading company data')
 
-                st.write('The best match is: {best_match}, symbol is {symbol}, with a score of {score}')
-            
-            elif best_match:
-                st.info("No strong match found. Try refining your input.")
-            else:
-                st.warning("No results returned from API.")
-        except Exception as e:
-            st.warning('Unable to complete {e}')
+            st.write('The best match is: {best_match}, symbol is {symbol}, with a score of {score}')
+        
+        elif best_match:
+            st.info("No strong match found. Try refining your input.")
+        else:
+            st.warning("No results returned from API.")
                 
             # dossier = pull_company_data(symbol)
             # st.table(pd.read_json(dossier))

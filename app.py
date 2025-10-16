@@ -17,13 +17,20 @@ query = st.text_input('Enter search term: ')
 if query:
     with st.spinner('Fetching results...'):
         result = search_button(query)
-        best_match, score, symbol = process_results(query, result)
+        best_match, score = process_results(query, result)
         
-        if best_match and score > 70:
-            st.success(f'✅ Found {query} in database.')
-            st.spinner('Loading company data')
+        try:
+            if best_match and score > 70:
+                st.success(f'✅ Found {query} in database.')
+                st.spinner('Loading company data')
 
-            st.write('The best match is: {best_match}, symbol is {symbol}, with a score of {score}')
+                st.write('The best match is: {best_match}, symbol is {symbol}, with a score of {score}')
+            
+            elif best_match:
+                st.info("No strong match found. Try refining your input.")
+            else:
+                st.warning("No results returned from API.")
+            
             # dossier = pull_company_data(symbol)
             # st.table(pd.read_json(dossier))
             # selected_company = st_searchbox(

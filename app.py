@@ -30,7 +30,9 @@ if query:
                 st.info("No strong match found. Try refining your input.")
             else:
                 st.warning("No results returned from API.")
-            
+        except Exception as e:
+            st.warning('Unable to complete {e}')
+                
             # dossier = pull_company_data(symbol)
             # st.table(pd.read_json(dossier))
             # selected_company = st_searchbox(

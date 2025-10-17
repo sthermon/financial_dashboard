@@ -6,7 +6,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-'''Example'''
 
 DB_PATH = Path(__file__).resolve().parent.parent / "db" / "financial_data.db"
 

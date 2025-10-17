@@ -1,5 +1,5 @@
 import pandas as pd
-from data_ingestion import quote_historic_data
+from data_ingestion.fetch_data import quote_historic_data
 from utils.metrics import price_metrics
 from utils.db_connection import logger
 

@@ -1,8 +1,7 @@
 import pandas as pd
-import sqlite3
-from data_ingestion import pull_company_data, quote_data, quote_historic_data
-from data_ingestion import clean_stock
-from utils import connect_db, logger
+from data_ingestion.fetch_data import pull_company_data, quote_data, quote_historic_data
+from data_ingestion.clean_data import clean_stock
+from utils.db_connection import connect_db, logger
 
 
 def load_company_data(symbol:str):

@@ -1,27 +1,29 @@
 import streamlit as st
 import pandas as pd
 from streamlit_searchbox import st_searchbox
-from dashboard import get_company_info, process_results
-from data_ingestion import pull_company_data
+from dashboard.queries import get_company_info, process_results
+from data_ingestion.fetch_data import pull_company_data
 # from data_ingestion import clean_stock
 
 st.title("📈 Financial Dashboard")
 
 def search_button(search:str):
     
-    result = get_company_info(search)
-    return result
+    result_obj = get_company_info(search)
+    
+    return result_obj
 
 query = st.text_input('Enter search term: ')
 
 if query:
     with st.spinner('Fetching results...'):
         result = search_button(query)
-        best_match, score = process_results(query, result)
+        best_match = process_results(query, result)
         
-        # st.table(result)
+        st.table(result)
+        # st.write(result)
+        st.write(query)
         st.write(best_match)
-        st.write(score)
         
         if best_match and score > 70:
             st.success(f'✅ Found {query} in database.')

@@ -1,9 +1,9 @@
-from collections import namedtuple
 import requests
 import pandas as pd
-from rapidfuzz import process, fuzz
-from data_ingestion import company_check
-from utils import logger
+from collections import namedtuple
+from rapidfuzz import process, fuzz, utils
+from data_ingestion.fetch_data import company_check
+from utils.db_connection import logger
 
 
 def get_company_info(symbol:str):
@@ -30,18 +30,26 @@ def get_company_info(symbol:str):
     except requests.RequestException as e:
         logger.error(f'Search failed: {e}')
         return 'Unable to complete'
+    # print(sorted_matches)
         
     return sorted_matches
 
 
-def process_results(symbol:str, matches:list, key='name'):
+def process_results(symbol:str, matches):
     
     if not matches:
         return None, 0    
     
-    best_match, score, _ = process.extractOne(symbol, matches, scorer=fuzz.WRatio)
+    best_match = process.extract_iter(symbol, choices=matches, processor=utils.default_process, scorer=fuzz.WRatio)
     
-    matched_search = next((v for v in matches if v in [key] == best_match), None)
+    first_el = list(best_match[0])
+    # next((v for v in matches if v in [key] == best_match), None)
+    print(first_el)
     
-    return matched_search, score
+    
+promtp = input("Enter company ticker:  ")
+pull = get_company_info(promtp)
+test = process_results(promtp, pull)
 
+
+# [('Match',[symbol, name, score])]

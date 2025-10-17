@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from utils.db_connection import logger
+from utils import logger
 
 
 API_KEY = st.secrets['api']['key']

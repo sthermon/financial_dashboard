@@ -1,5 +1,6 @@
-import streamlit as st
 import requests
+import csv
+import streamlit as st
 from utils import logger
 
 
@@ -18,16 +19,13 @@ def company_check(symbol:str):
         response = requests.get(f'{API_URL}/', params=parameters)
         response.raise_for_status()
         
-    except requests.RequestException:
-        return None
-    
-    try:
-        result = response.json()
-        return result
-    
     except requests.RequestException as e:
         logger.error(f'API request failed: {e}')
-        return 'Not found'
+        return 'Unable to complete or not found'
+    
+    result = response.json()
+    return result
+    
     
     
 def pull_company_data(symbol:str):
@@ -42,17 +40,15 @@ def pull_company_data(symbol:str):
         
     except requests.RequestException as e:
         logger.error(f'API request failed: {e}')
-        return None
+        return 'Unable to complete or not found'
 
-    try:
-        dossier = response.json()
-        key_info = ['Symbol', 'Name', 'Exchange', 'Sector', 'DividendPerShare', 'DividendYield', 'EPS', '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage','FiscalYearEnd', 'LatestQuarter', 'DividendDate', 'ExDividendDate']
-        return {
-            key: dossier[key] for key in key_info if key in dossier
-        }
-        
-    except (KeyError, TypeError, ValueError):
-        return None
+    
+    dossier = response.json()
+    key_info = ['Symbol', 'Name', 'Exchange', 'Sector', 'DividendPerShare', 'DividendYield', 'EPS', '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage','FiscalYearEnd', 'LatestQuarter', 'DividendDate', 'ExDividendDate']
+    return {
+        key: dossier[key] for key in key_info if key in dossier
+    }
+    
 
 
 def quote_data(symbol:str):
@@ -62,14 +58,15 @@ def quote_data(symbol:str):
     parameters = {'function':'GLOBAL_QUOTE', 'symbol':symbol, 'datatype':'json', 'apikey':API_KEY}
     
     try:
-        response = requests.get(f'{API_URL}/', params={parameters})
+        response = requests.get(f'{API_URL}/', params=parameters)
         response.raise_for_status()
         
     except requests.RequestException as e:
         logger.error(f'API request failed: {e}')
-        return None
+        return 'Unable to complete or not found'
     
-    return response
+    quote_result = response.json()
+    return quote_result
 
 
 def quote_historic_data(symbol:str, period:str):
@@ -84,8 +81,9 @@ def quote_historic_data(symbol:str, period:str):
         
     except requests.RequestException as e:
         logger.error(f'API request failed: {e}')
-        return None
+        return 'Unable to complete or not found'
     
-    return response
+    historic_data = response.csv
+    return historic_data
     
     

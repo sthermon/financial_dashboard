@@ -208,5 +208,5 @@ __marimo__/
 
 # Streamlit
 secrets.toml
-Dbug.py
+debug.py
 .Streamlit

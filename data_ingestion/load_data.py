@@ -1,9 +1,10 @@
 import pandas as pd
+import streamlit as st
 from data_ingestion.fetch_data import pull_company_data, quote_data, quote_historic_data
 from data_ingestion.clean_data import clean_stock
-from utils.db_connection import connect_db, logger
+from utils.db_connection import connect_db, init_db ,logger
 
-
+@st.cache_data
 def load_company_data(symbol:str):
     
     quote = pull_company_data(symbol)
@@ -42,7 +43,7 @@ def load_company_data(symbol:str):
         conn.close()
    
     
-    
+@st.cache_data
 def load_daily_data(symbol:str):
     
     data = quote_data(symbol)
@@ -76,9 +77,8 @@ def load_daily_data(symbol:str):
         conn.close()
 
 
-
+@st.cache_data
 def periodic_data(symbol:str, period:str):
-    pass
     data = clean_stock(symbol, period)
     conn = connect_db()
     try:

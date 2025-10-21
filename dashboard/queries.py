@@ -1,8 +1,8 @@
 import requests
-import pandas as pd
 from collections import namedtuple
-from rapidfuzz import process, fuzz, utils
-from data_ingestion.fetch_data import company_check
+from rapidfuzz import process, fuzz
+from data_ingestion.fetch_data import company_check, pull_company_data
+from data_ingestion.load_data import load_company_data, load_daily_data
 from utils.db_connection import logger
 
 
@@ -30,26 +30,30 @@ def get_company_info(symbol:str):
     except requests.RequestException as e:
         logger.error(f'Search failed: {e}')
         return 'Unable to complete'
-    # print(sorted_matches)
         
     return sorted_matches
 
 
-def process_results(symbol:str, matches):
+def process_results(symbol:str, matches, top=5):
     
     if not matches:
-        return None, 0    
-    
-    best_match = process.extract_iter(symbol, choices=matches, processor=utils.default_process, scorer=fuzz.WRatio)
-    
-    first_el = list(best_match[0])
-    # next((v for v in matches if v in [key] == best_match), None)
-    print(first_el)
-    
-    
-promtp = input("Enter company ticker:  ")
-pull = get_company_info(promtp)
-test = process_results(promtp, pull)
+        return []  
 
+    # To N of matches above with top score
+    top_matches = process.extract(
+        symbol,
+        choices=matches,
+        scorer=fuzz.WRatio,
+        limit=top,    
+    )
 
-# [('Match',[symbol, name, score])]
+    # List of tuples (match, score) processing therapidfuzz result
+    return [(match, score) for match, score, _ in top_matches]
+    
+    
+def submit_selection(symbol:str):
+    
+    dossier = pull_company_data(symbol)
+    load_company_data(symbol)
+    load_daily_data(symbol)
+    return dossier

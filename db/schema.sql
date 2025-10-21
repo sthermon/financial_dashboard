@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS companies (
     moving_average_50_day_ NUMERIC, 
     moving_average_200_day_ NUMERIC, 
     dividend_per_share NUMERIC, 
-    dividend_yield REAL, 
+    dividend_yield REAL,
     fiscal_year_end TEXT, 
     latest_quarter TEXT, 
     dividend_date TEXT, 
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS financial_metrics (
     symbol TEXT,
     open REAL,
     high REAL,
-    low, REAL,
+    low REAL,
     price REAL,
     previous_close REAL,
     volume NUMERIC,
@@ -36,11 +36,10 @@ CREATE TABLE IF NOT EXISTS financial_metrics (
     change_percentage REAL,
     global_id INTEGER NOT NULL,
     FOREIGN KEY(global_id) REFERENCES companies(id)
-    UNIQUE(global_id, date,)
+    UNIQUE(global_id, date)
 );
 
 -- Periodic metrics table
-## TODO ## Update schema with dynamic table
 
 CREATE TABLE IF NOT EXISTS periodic_metrics (
     id INTEGER PRIMARY KEY,
@@ -48,7 +47,7 @@ CREATE TABLE IF NOT EXISTS periodic_metrics (
     date DATE,
     open REAL,
     high REAL,
-    low, REAL,
+    low REAL,
     close REAL,
     adjusted_close REAL,
     volume NUMERIC,

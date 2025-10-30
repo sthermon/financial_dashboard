@@ -23,8 +23,8 @@ if query:
         options = [f'{i}. {company.symbol} - {company.longname} - ({company.typeDisp})'
                    for i, company in enumerate(lookup_company, 1)]
         
-        prompt = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
-        
+        selected_option = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
+        prompt = int(selected_option[0])
         selected_company = lookup_company[prompt - 1]
         symbol = selected_company.symbol
         

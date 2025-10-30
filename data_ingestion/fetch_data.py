@@ -39,16 +39,15 @@ def quote_data(symbol:str) -> tuple:
         Function that receives a user search, process and returns 5 possible matches
         in a list of tuples
     '''
-    search_results = yf.Search(symbol, max_results=5, news_count=0) # Run tests for search functionality
+    search_results = yf.Search(symbol, max_results=5, news_count=0) 
     query = search_results.all
-    Stocks = namedtuple('Match', ['symbol', 'shortname', 'typeDisp'])
-    
+    Stocks = namedtuple('Stocks', ['symbol', 'longname', 'typeDisp'])
     try:
         companies = query.get('quotes', [])
         results = [
             Stocks(
             company['symbol'],
-            company['shortname'],
+            company['longname'],
             company['typeDisp']
         )
         for company in companies

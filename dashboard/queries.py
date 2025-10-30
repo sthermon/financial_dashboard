@@ -49,7 +49,7 @@ def process_results(symbol:str, matches, top=5):
     
     
 def submit_selection(symbol:str):
-    
+    pass
     # dossier = pull_company_data(symbol)
     periodic_data(symbol, period='weekly')
     if load_company_data(symbol, dossier):

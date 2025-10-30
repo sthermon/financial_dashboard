@@ -20,8 +20,8 @@ if query:
     with st.spinner('Fetching results...'):
         print(f'Passing the values {query}')
         lookup_company = quote_data(query)
-        options = [f'{i}. {company.longname} - ({company.symbol}) -  {company.typeDisp}'
-                   for i, (company) in enumerate(lookup_company, 1)]
+        options = [f'{i}. {company.symbol} - {company.longname} - ({company.typeDisp})'
+                   for i, company in enumerate(lookup_company, 1)]
         
         prompt = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
         

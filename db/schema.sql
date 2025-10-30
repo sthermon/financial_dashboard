@@ -2,7 +2,7 @@
 -- Companies Table
 
 CREATE TABLE IF NOT EXISTS companies (
-    id INTEGER PRIMARY KEY, 
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
     name TEXT NOT NULL, 
     symbol TEXT UNIQUE, 
     sector TEXT,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS companies (
 -- Financial metrics table
 
 CREATE TABLE IF NOT EXISTS financial_metrics (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE,
     symbol TEXT,
     open REAL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS financial_metrics (
 -- Periodic metrics table
 
 CREATE TABLE IF NOT EXISTS periodic_metrics (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     company_id INTEGER NOT NULL,
     date DATE,
     open REAL,

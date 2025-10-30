@@ -1,6 +1,7 @@
 import requests
-import csv
+import yfinance as yf
 import streamlit as st
+from collections import namedtuple
 from utils import logger
 
 
@@ -8,73 +9,64 @@ API_KEY = st.secrets['api']['key']
 API_URL = st.secrets['api']['url']
 
 
-@st.cache_data(show_spinner=False)
-def company_check(symbol:str):
-    '''Fuction that will query company information on url and will return a 
-        set if possible matches to be displayed on main app. 
-        Accepts a ticker text from the user interface
-    '''
-    parameters = {'function':'SYMBOL_SEARCH', 'keywords':symbol, 'apikey':API_KEY}
-    try:
-        response = requests.get(f'{API_URL}/', params=parameters)
-        response.raise_for_status()
-        
-    except requests.RequestException as e:
-        logger.error(f'API request failed: {e}')
-        return 'Unable to complete or not found'
+@st.cache_data
+def company_info(symbol:str):
     
-    result = response.json()
-    return result
-    
-    
-    
-def pull_company_data(symbol:str):
-    '''
-        Function that will pull company information in json format and will select main interest points
-        to select and store in database
-    '''
-    parameters = {'symbol':symbol, 'function':'OVERVIEW', 'apikey':API_KEY}
-    try:
-        response = requests.get(f'{API_URL}/',  params=parameters)
-        response.raise_for_status()
-        
-    except requests.RequestException as e:
-        logger.error(f'API request failed: {e}')
-        return 'Unable to complete or not found'
-
-    
-    dossier = response.json()
-    key_info = ['Symbol', 'Name', 'Exchange', 'Sector', 'DividendPerShare', 'DividendYield', 'EPS', '52WeekHigh', '52WeekLow', '50DayMovingAverage', '200DayMovingAverage','FiscalYearEnd', 'LatestQuarter', 'DividendDate', 'ExDividendDate']
-    return {
-        key: dossier[key] for key in key_info if key in dossier
+    company = yf.Ticker(symbol)
+    info = company.info
+    ticker = {
+        info['displayName'],
+        info['symbol'],
+        info['sector'],
+        info['open'],
+        info['previousClose'],
+        info['volume'],
+        info['epsCurrentYear'],
+        info['fiftyTwoWeekHigh'],
+        info['fiftyTwoWeekLow'],
+        info['exDividendDate'],
+        info['payoutRatio'],
+        info['lastFiscalYearEnd'],
+        info['mostRecentQuarter'],
+        info['trailingAnnualDividendRate'],
+        info['exDividendDate']
     }
-    
+        
+    return ticker
 
-
-def quote_data(symbol:str):
+def quote_data(symbol:str) -> tuple:
     '''
-        Function that retrieves the most recent information from a company and returns a csv file
+        Function that receives a user search, process and returns 5 possible matches
+        in a list of tuples
     '''
-    parameters = {'function':'GLOBAL_QUOTE', 'symbol':symbol, 'datatype':'json', 'apikey':API_KEY}
+    search_results = yf.Search(symbol, max_results=5, news_count=0) # Run tests for search functionality
+    query = search_results.all
+    Stocks = namedtuple('Match', ['symbol', 'shortname', 'typeDisp'])
     
     try:
-        response = requests.get(f'{API_URL}/', params=parameters)
-        response.raise_for_status()
-        
+        companies = query.get('quotes', [])
+        results = [
+            Stocks(
+            company['symbol'],
+            company['shortname'],
+            company['typeDisp']
+        )
+        for company in companies
+        ]
     except requests.RequestException as e:
-        logger.error(f'API request failed: {e}')
-        return 'Unable to complete or not found'
+        logger.error(f'Search failed: {e}')
+        return 'Unable to complete'
+        
+    return results
     
-    quote_result = response.json()
-    return quote_result
 
-
+@st.cache_data(show_spinner=False)
 def quote_historic_data(symbol:str, period:str):
     
     series_list = ['TIME_SERIES_MONTHLY_ADJUSTED', 'TIME_SERIES_WEEKLY_ADJUSTED']
     frequency = series_list[0] if period == 'monthly' else series_list[1] if period == 'weekly' else None
     
-    parameters = {'symbol':symbol, 'function':frequency, 'datatype':'csv', 'apikey':API_KEY}
+    parameters = {'symbol':symbol, 'function':frequency, 'datatype':'json', 'apikey':API_KEY}
     try:
         response = requests.get(f'{API_URL}/', params=parameters)
         response.raise_for_status()

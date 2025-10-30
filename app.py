@@ -1,50 +1,51 @@
 import streamlit as st
-import pandas as pd
-from streamlit_searchbox import st_searchbox
 from dashboard.queries import get_company_info, process_results, submit_selection
-from utils.db_connection import init_db, connect_db, logger
-# from data_ingestion.fetch_data import pull_company_data
-# from data_ingestion import clean_stock
+from data_ingestion.load_data import retrieve_company_data, retrieve_periodic_data
+from data_ingestion.fetch_data import quote_data, quote_historic_data
+from utils.db_connection import init_db, connect_db
 
 init_db()
-@st.cache_resource
 def get_db_connection():
     return connect_db()
 
 st.title("📈 Financial Dashboard")
 
-def search_button(search:str):
-    
-    result_obj = get_company_info(search)
-    return result_obj
-
-query = st.text_input('Enter search term: ')
+st.write('-------')
 # st.session_state
+st.write('Enter company ticker or Symbol:')
+query = st.text_input(' ', placeholder='Enter a company ticker (e.g., AAPL, MSFT, TSLA):', key='search', max_chars=20, width=500)
+# user_clicked = st.button('Search')
+
 if query:
     with st.spinner('Fetching results...'):
+        print(f'Passing the values {query}')
+        lookup_company = quote_data(query)
+        options = [f'{i}. {company.longname} - ({company.symbol}) -  {company.typeDisp}'
+                   for i, (company) in enumerate(lookup_company, 1)]
         
-        result = search_button(query)
-        best_matches = process_results(query, result)
+        prompt = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
         
-        options = [f'{i}. {match.name} - ({match.symbol})'
-                   for i, (match, score) in enumerate(best_matches, 1)
-                ]
-        results = {company: (symbol, name) for company, (symbol, name) in zip(options, best_matches)}
+        selected_company = lookup_company[prompt - 1]
+        symbol = selected_company.symbol
         
-        selected = st.selectbox('Please select the ticker company: ', options)
-        company, _ = results[selected]
-        symbol = company.symbol
-                
-        if selected:
-            st.success(f'✅ Fetching {query} overview.')
-            dossier = submit_selection(symbol=symbol)
-            with st.spinner('Loading company data'):
-                st.table(dossier)
-        else:
-            st.error('Company not found ⚠️')
-                
-                
-                
+        if prompt:
+            dossier = get_company_info(symbol)
+            st.table(dossier)
+        
+        # if result:
+        #     st.success(f'✅ Fetching {query} overview.')
+        #     dossier = submit_selection(symbol=symbol)
+        #     st.table(dossier)
+        #     weekly = retrieve_periodic_data(symbol)
+        #     st.data_editor(weekly)
+        #     if not weekly:
+        #         st.error('Company not found ⚠️')
+        #     st.spinner('Loading company data')
+        #     db_data = retrieve_company_data(symbol)
+        #     st.table(db_data)
+        # else: 
+# else:
+    # st.error('Company not found ⚠️')
                 # data_load = 
 
         #     st.write('The best match is: {best_match}, symbol is {symbol}, with a score of {score}')
@@ -62,21 +63,6 @@ if query:
 #     # key='ticker',
 #     min_execution_time=10
 # )
-
-# matches = get_company_info(user_input)
-# top_matches = process_results(user_input, matches, top_n=3)
-
-# if not top_matches:
-#     print("No matches found.")
-# else:
-#     print("Top matches:")
-#     for i, (match, score) in enumerate(top_matches, 1):
-#         print(f"{i}. {match.name} ({match.symbol}) - Score: {score}")
-
-#     # Let user select (e.g., via input or click)
-#     selected_index = int(input("Enter the number of your choice: ")) - 1
-#     selected_match = top_matches[selected_index][0]
-#     print(f"You selected: {selected_match.name}")
 
 
 # if selected_company:

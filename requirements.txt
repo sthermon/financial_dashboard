@@ -1,5 +1,6 @@
 streamlit
 pandas
+yfinance
 numpy
 streamlit_searchbox
 rapidfuzz

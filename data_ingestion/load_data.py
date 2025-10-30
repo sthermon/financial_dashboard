@@ -1,55 +1,60 @@
+import sqlite3
 import pandas as pd
 import streamlit as st
-from data_ingestion.fetch_data import pull_company_data, quote_data, quote_historic_data
+import json
+from data_ingestion.fetch_data import quote_historic_data, quote_data
 from data_ingestion.clean_data import clean_stock
-from utils.db_connection import connect_db, init_db ,logger
+from utils.db_connection import connect_db, logger
 
-@st.cache_data
-def load_company_data(symbol:str):
+@st.cache_resource
+def load_company_data(symbol:str, quote):
     
-    quote = pull_company_data(symbol)
-    conn = connect_db()
     try:
-        conn.execute(
-            '''
-                INSERT OR IGNORE INTO companies(
-                name, symbol, sector, exchange, eps, week_52_high, week_52_low, moving_average_50_day_,
-                moving_average_200_day_, dividend_per_share, dividend_yield, fiscal_year_end, latest_quarter, 
-                dividend_date, last_dividend_date)
+        with connect_db() as conn:
+            conn.cursor()
+            conn.execute(
+                '''
+                INSERT OR REPLACE INTO companies(
+                name, symbol, sector, open, previous_close, volume, eps_current_year, fifty_two_week_high,
+                fifty_two_week_low, ex_dividend_date, payout_ratio, fiscal_year_end, most_recent_quarter, 
+                annual_dividend_rate, last_dividend_date
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     
-            ''', (
-            quote.get('Name'),
-            quote.get('Symbol'),
-            quote.get('Sector'),
-            quote.get('Exchange'),
-            quote.get('EPS'),
-            quote.get('52WeekHigh'),
-            quote.get('52WeekLow'),
-            quote.get('50DayMovingAverage'),
-            quote.get('200DayMovingAverage'),
-            quote.get('DividendPerShare'),
-            quote.get('DividendYield'),
-            quote.get('FiscalYearEnd'),
-            quote.get('LatestQuarter'),
-            quote.get('DividendDate'),
-            quote.get('ExDividendDate')
+                '''
+            , (
+            quote.get('displayName'),
+            quote.get('symbol'),
+            quote.get('sector'),
+            quote.get('open'),
+            quote.get('previousClose'),
+            quote.get('volume'),
+            quote.get('epsCurrentYear'),
+            quote.get('fiftyTwoWeekHigh'),
+            quote.get('fiftyTwoWeekLow'),
+            quote.get('exDividendDate'),
+            quote.get('payoutRatio'),
+            quote.get('lastFiscalYearEnd'),
+            quote.get('mostRecentQuarter'),
+            quote.get('trailingAnnualDividendRate'),
+            quote.get('exDividendDate'),
             )
         )
         conn.commit()
+        print(f'Company information for {symbol} uploaded')
+        return True
     except Exception as e:
         logger.error(f"Error inserting data: {e}")
-    finally:
-        conn.close()
+        return False
    
     
-@st.cache_data
-def load_daily_data(symbol:str):
+@st.cache_resource
+def load_daily_data(symbol:str, quote):
     
-    data = quote_data(symbol)
-    conn = connect_db()
     try:
-        conn.execute(
+        with connect_db() as conn:
+            conn.cursor()
+            conn.execute(
             '''
                 INSERT OR IGNORE INTO financial_metrics(
                     global_id, date, symbol, open, high, low, price, previous_close, volume, change, change_percentage
@@ -57,27 +62,27 @@ def load_daily_data(symbol:str):
                 SELECT (SELECT id FROM companies where symbol=?),
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                symbol,
-                data.get('Global Quote', {}).get('07. latest trading day'),
-                data.get('Global Quote', {}).get('01. symbol'),
-                data.get('Global Quote', {}).get('02. open'),
-                data.get('Global Quote', {}).get('03. high'),
-                data.get('Global Quote', {}).get('04. low'),
-                data.get('Global Quote', {}).get('05. price'),
-                data.get('Global Quote', {}).get('08. previous close'),
-                data.get('Global Quote', {}).get('06. volume'),
-                data.get('Global Quote', {}).get('09. change'),
-                data.get('Global Quote', {}).get('10. change percent'),
+                symbol.upper(),
+                quote.get('Global Quote', {}).get('07. latest trading day'),
+                quote.get('Global Quote', {}).get('01. symbol'),
+                quote.get('Global Quote', {}).get('02. open'),
+                quote.get('Global Quote', {}).get('03. high'),
+                quote.get('Global Quote', {}).get('04. low'),
+                quote.get('Global Quote', {}).get('05. price'),
+                quote.get('Global Quote', {}).get('08. previous close'),
+                quote.get('Global Quote', {}).get('06. volume'),
+                quote.get('Global Quote', {}).get('09. change'),
+                quote.get('Global Quote', {}).get('10. change percent'),
             )
         )
         conn.commit()
+        return True
     except Exception as e:
         logger.error(f"Error inserting data: {e}")
-    finally:
-        conn.close()
+        return False
 
 
-@st.cache_data
+@st.cache_resource
 def periodic_data(symbol:str, period:str):
     data = clean_stock(symbol, period)
     conn = connect_db()
@@ -118,3 +123,57 @@ def periodic_data(symbol:str, period:str):
         conn.close()
 
 
+#TODO UPDATE NAMES
+def retrieve_company_data(symbol:str):
+    
+    try:
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM companies WHERE symbol = ?', (symbol,))
+        result = cur.fetchall()
+        if result:
+            {
+            'Name':result[0],
+            'Symbol':result[1],
+            'Sector':result[2],
+            'Exchange':result[3],
+            'EPS':result[4],
+            '52WeekHigh':result[5],
+            '52WeekLow':result[6],
+            '50DayMovingAverage':result[7],
+            '200DayMovingAverage':result[8],
+            'DividendPerShare':result[9],
+            'DividendYield':result[10],
+            'FiscalYearEnd':result[11],
+            'LatestQuarter':result[12],
+            'DividendDate':result[13],
+            'ExDividendDate':result[14]
+            }
+            return result #result #{'name': result[0], 'symbol': result[1]}
+        return None
+        
+    except Exception as e:
+        logger.error(f'Error retrieving data for {symbol}: {e}')
+        return None
+    finally:
+        conn.close()
+
+
+def retrieve_periodic_data(symbol:str):
+    
+    try:
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM periodic_metrics WHERE symbol =?', (symbol,))
+        result = cur.fetchmany()
+        if result:
+            df = pd.DataFrame('periodic_metrics', result)
+            return df
+        return None
+    
+    except Exception as e:
+        logger.error(f'Error retrieving data for {symbol}: {e}')
+        return None
+    finally:
+        conn.close()
+    

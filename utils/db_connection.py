@@ -15,7 +15,6 @@ def connect_db():
     return sqlite3.connect(DB_PATH)    
         
 def init_db():
-    
     connection = sqlite3.connect(DB_PATH)
     with open(SCHEMA, 'r') as f:
         schema_sql = f.read()

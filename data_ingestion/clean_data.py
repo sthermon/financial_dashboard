@@ -1,10 +1,10 @@
 import pandas as pd
-from data_ingestion.fetch_data import quote_historic_data
+from data_ingestion.fetch_data import quote_historic_data, quote_data
 from utils.metrics import price_metrics
 from utils.db_connection import logger
 
 
-def clean_stock(symbol, period:str):
+def clean_stock(symbol:str, period:str):
     '''
         Function that will accept and call other functions to clean 
         rename and add aggregated metrics returning the clean Dataframe
@@ -24,7 +24,7 @@ def clean_stock(symbol, period:str):
     return new_data
 
 
-def reshape_data(df, period):
+def reshape_data(df, period:str):
     '''
         Function that renames colums from a Dataframe and merges calculated metrics
     '''
@@ -34,3 +34,15 @@ def reshape_data(df, period):
     update_data = price_metrics(data, period)
     
     return pd.DataFrame(update_data)
+
+def daily_data_clean(symbol:str):
+    
+    quote = quote_data(symbol)
+    data = pd.DataFrame.from_dict(quote, orient='index')
+    columns = ['07. latest trading day', '01. symbol', '02. open','03. high','04. low','05. price','08. previous close','06. volume','09. change','10. change percent']
+    column_names = ['last_trading_day', 'symbol', 'open', 'high', 'low', 'price', 'last_close', 'volume', 'change', 'change_pct']
+    data_select = data.copy()
+    new_selec = data_select[columns]
+    new_selec.columns = column_names
+    return new_selec
+

@@ -19,5 +19,8 @@ def price_metrics(df, period:str):
 
 ## TODO ##
 
-def technical_analysis(df):
+def additional_metrics(df):
     pass
+    df['range'] = df['high'] - df['low']
+    df['avg_price'] = (df['high'] + df['low'] + df['close']) / 3
+    

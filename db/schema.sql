@@ -2,22 +2,22 @@
 -- Companies Table
 
 CREATE TABLE IF NOT EXISTS companies (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    name TEXT NOT NULL, 
-    symbol TEXT UNIQUE, 
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    symbol TEXT UNIQUE,
     sector TEXT,
-    exchange TEXT, 
-    eps NUMERIC , 
-    week_52_high NUMERIC, 
-    week_52_low NUMERIC, 
-    moving_average_50_day_ NUMERIC, 
-    moving_average_200_day_ NUMERIC, 
-    dividend_per_share NUMERIC, 
-    dividend_yield REAL,
-    fiscal_year_end TEXT, 
-    latest_quarter TEXT, 
-    dividend_date TEXT, 
-    last_dividend_date TEXT
+    open REAL,
+    current_price REAL,
+    previous_close REAL,
+    volume NUMERIC,
+    average_volume NUMERIC,
+    eps_current_year REAL,
+    week_52_high REAL,
+    week_52_low REAL,
+    payout_ratio REAL,
+    target_mean_price REAL,
+    dividend_rate NUMERIC,
+    market_sentiment TEXT
 );
 
 -- Financial metrics table

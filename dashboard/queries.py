@@ -1,9 +1,9 @@
 import requests
 import streamlit as st
-from collections import namedtuple
-from rapidfuzz import process, fuzz
-from data_ingestion.fetch_data import quote_historic_data, company_info
-from data_ingestion.load_data import load_company_data, load_daily_data, retrieve_company_data, periodic_data
+import pandas as pd
+from data_ingestion.fetch_data import company_info
+from data_ingestion.load_data import load_company_data, retrieve_company_data, periodic_data
+# from data_ingestion.clean_data import
 from utils.db_connection import logger
 
 # Check for database information first, otherwise pull information from API
@@ -17,41 +17,25 @@ def get_company_info(symbol:str):
     try:
         local_inquiry = retrieve_company_data(symbol)
         if local_inquiry == None:
-            inquiry = company_info(symbol)
-            load_company_data(symbol, inquiry)
-            if inquiry == None:
+            quote = company_info(symbol)
+            if quote == None:
                 return 'Unable to complete API call'
+            load_company_data(symbol, quote)
+            company_quote = pd.DataFrame.from_dict(quote, orient='columns')
+            return company_quote
+        
+        inquiry = pd.DataFrame([local_inquiry])
         return inquiry
             
     except requests.RequestException as e:
         logger.error(f'Search failed: {e}')
         return 'Unable to complete'
-        
 
 
-def process_results(symbol:str, matches, top=5):
-    '''
-        Function designed to process word matches and return the best scored matches in order
-    '''
-    if not matches:
-        return []  
-
-    # To N of matches above with top score
-    top_matches = process.extract(
-        symbol,
-        choices=matches,
-        scorer=fuzz.WRatio,
-        limit=top,    
-    )
-
-    # List of tuples (match, score) processing therapidfuzz result
-    return [(match, score) for match, score, _ in top_matches]
-    
-    
 def submit_selection(symbol:str):
     pass
     # dossier = pull_company_data(symbol)
-    periodic_data(symbol, period='weekly')
+    dossier = periodic_data(symbol, period='weekly')
     if load_company_data(symbol, dossier):
        
         print('Company updated to database')

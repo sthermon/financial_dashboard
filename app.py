@@ -1,6 +1,5 @@
 import streamlit as st
-from dashboard.queries import get_company_info, submit_selection
-from data_ingestion.clean_data import daily_data_clean
+from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry
 from data_ingestion.fetch_data import quote_data
 from utils.db_connection import init_db, connect_db
 
@@ -29,9 +28,11 @@ if query:
         symbol = selected_company.symbol
         
         if prompt:
-            daily_quote = st.dataframe(daily_data_clean(symbol))
+            daily_quote = st.dataframe(company_info_day(symbol))
             dossier = st.dataframe(get_company_info(symbol))
             
+            first_batch = submit_historic_inquiry(symbol)
+            batch = st.dataframe(first_batch)
             # st.subheader("Daily data")
             # st.table(daily_quote)
 

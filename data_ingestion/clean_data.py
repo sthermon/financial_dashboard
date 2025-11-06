@@ -1,25 +1,24 @@
 import pandas as pd
 from io import BytesIO
-from data_ingestion.fetch_data import quote_historic_data, daily_activity
+from data_ingestion.fetch_data import quote_historic_data
 # from data_ingestion.load_data import load_daily_data
 from utils.metrics import price_metrics
 from utils.db_connection import logger
 
 
-def clean_stock(symbol:str, period='weekly'):
+def clean_stock(dataframe, period:str):
     '''
         Function that will accept and call other functions to clean 
         rename and add aggregated metrics returning the clean Dataframe
     '''
-    
-    df = quote_historic_data(symbol, period)
+    df = dataframe
     if isinstance(df, bytes):
         data = pd.read_csv(BytesIO(df))
-        data = df.copy()
-        data = data.infer_objects()
-        data.sort_index(inplace=True)
-        null_values = data.isna().sum()
-        clean_data = data.dropna()
+        company_data = data.copy()
+        company_data = company_data.infer_objects()
+        company_data.sort_index(inplace=True)
+        null_values = company_data.isna().sum()
+        clean_data = company_data.dropna()
         logger.info(f'A total of {null_values.sum()} were dropped')
         new_data = reshape_data(clean_data, period)
         return new_data
@@ -39,16 +38,25 @@ def reshape_data(df, period:str):
     return pd.DataFrame(update_data)
 
 
-def daily_data_clean(symbol:str):
+def clean_company_info(df):
     
-    quote = daily_activity(symbol)
-    if isinstance(quote, pd.DataFrame):
-        data = pd.DataFrame.from_dict(quote)
-        data = data.infer_objects().reset_index().rename(columns={'index':'Date'})
-        # success = load_daily_data(symbol, data)
-        # if success:
-        #     print(f'Data added for {symbol}')
-        return data #if success else f'Failed to load data for {symbol}'
-    else:
-        print(f'Unable to open file: Filetype: {type(quote)}')
+     column_names = ['Name', 'Symbol', 'Sector', 'Current Price', 'Open', 'Previous Close' , 'Volume', 'Market Sentiment']
+     data = df.copy()
+     data = data[['name', 'symbol', 'sector', 'current_price', 'open', 'previous_close', 'volume', 'market_sentiment']]
+     data.columns = column_names
+     return data
+
+##TODO format day entry
+def clean_daily_info(symbol:str):
+    pass
+    # quote = daily_activity(symbol)
+    # if isinstance(quote, pd.DataFrame):
+    #     data = pd.DataFrame.from_dict(quote)
+    #     data = data.infer_objects().reset_index().rename(columns={'index':'Date'})
+    #     # success = load_daily_data(symbol, data)
+    #     # if success:
+    #     #     print(f'Data added for {symbol}')
+    #     return data #if success else f'Failed to load data for {symbol}'
+    # else:
+    #     print(f'Unable to open file: Filetype: {type(quote)}')
 

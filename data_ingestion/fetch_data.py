@@ -29,7 +29,7 @@ def quote_data(symbol:str) -> tuple:
         for company in companies
         ]
     except requests.RequestException as e:
-        logger.error(f'Search failed: {e}')
+        logger.error(f'Search {symbol} failed: "{e}"')
         return 'Unable to complete'
         
     return results
@@ -37,26 +37,30 @@ def quote_data(symbol:str) -> tuple:
 @st.cache_data
 def company_info(symbol:str):
     
-    company = yf.Ticker(symbol)
-    info = company.info
-    summary = {
-        'name':info['displayName'],
-        'symbol':info['symbol'],
-        'sector':info['sector'],
-        'open':info['open'],
-        'current_price':info['currentPrice'],
-        'previous_close':info['previousClose'],
-        'volume':info['volume'],
-        'averageVolume':info['averageVolume'],
-        'eps_current_year':info['epsCurrentYear'],
-        'week_52_high':info['fiftyTwoWeekHigh'],
-        'week_52_low':info['fiftyTwoWeekLow'],
-        'payout_ratio':info['payoutRatio'],
-        'target_mean_price':info['targetMeanPrice'],
-        'dividend_rate':info['trailingAnnualDividendRate'],
-        'market_sentiment':info['recommendationKey']
-    }
-    return summary
+    try:
+        company = yf.Ticker(symbol)
+        info = company.info
+        summary = {
+            'name':info['displayName'],
+            'symbol':info['symbol'],
+            'sector':info['sector'],
+            'open':info['open'],
+            'current_price':info['currentPrice'],
+            'previous_close':info['previousClose'],
+            'volume':info['volume'],
+            'averageVolume':info['averageVolume'],
+            'eps_current_year':info['epsCurrentYear'],
+            'week_52_high':info['fiftyTwoWeekHigh'],
+            'week_52_low':info['fiftyTwoWeekLow'],
+            'payout_ratio':info['payoutRatio'],
+            'target_mean_price':info['targetMeanPrice'],
+            'dividend_rate':info['trailingAnnualDividendRate'],
+            'market_sentiment':info['recommendationKey']
+        }
+        return summary
+    except requests.RequestException as e:
+        logger.error(f'Search failed for {symbol}: {e}')
+        return None
     
     
 @st.cache_data
@@ -67,8 +71,8 @@ def daily_activity(symbol:str):
         ticker_day = ticker.history(period='1d')
         
     except requests.RequestException as e:
-        logger.error(f'Search failed: {e}')
-        return f'Unable to complete call for {symbol}: "{e}"'
+        logger.error(f'Unable to complete call for {symbol}: "{e}"')
+        return None
     
     return ticker_day
 
@@ -85,8 +89,8 @@ def quote_historic_data(symbol:str, period:str):
         response.raise_for_status()
         
     except requests.RequestException as e:
-        logger.error(f'API request failed: {e}')
-        return 'Unable to complete or not found'
+        logger.error(f'API request failed for {symbol}: "{e}"')
+        return None
     
     historic_data = response.content
     return historic_data

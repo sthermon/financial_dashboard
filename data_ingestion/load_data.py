@@ -29,8 +29,8 @@ def load_company_data(symbol:str, quote):
             float(quote.get('open')),
             float(quote.get('current_price')),
             float(quote.get('previous_close')),
-            int(quote.get('volume')),
-            int(quote.get('average_volume')),
+            int(quote.get('volume', 0)),
+            int(quote.get('average_volume', 0)),
             float(quote.get('eps_current_year')),
             float(quote.get('week_52_high')),
             float(quote.get('week_52_low')),
@@ -55,23 +55,29 @@ def load_daily_data(symbol:str, quote):
     try:
         with connect_db() as conn:
             cursor = conn.cursor()
+            global_id = cursor.execute(
+                'SELECT id FROM companies WHERE symbol=?',
+                (symbol.upper(),)
+            ).fetchone()[0]
+            
             for _, row in quote.iterrows():
+                date_value = row['Date'].to_pydatetime().date()
                 cursor.execute(
-                '''
-                    INSERT OR REPLACE INTO financial_metrics(
-                        global_id, date, symbol, open, high, low, close, volume, dividends, stock_splits
-                    )
-                    SELECT (SELECT id FROM companies where symbol=?),
-                    (?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
+                    '''
+                    INSERT OR REPLACE INTO financial_metrics
+                    (global_id, date, symbol, open, high, low, close, volume, dividends, stock_splits)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''',
+                (
+                    global_id,
+                    date_value,
                     symbol.upper(),
-                    row['Date'],
                     float(row.get('Open')),
                     float(row.get('High')),
                     float(row.get('Low')),
                     float(row.get('Close')),
-                    int(row.get('Volume')),
-                    row.get('Dividends'),
+                    row.get('Volume', 0),
+                    row.get('Dividends', 0),
                     row.get('Stock Splits'),
                     )   
                 )
@@ -82,25 +88,26 @@ def load_daily_data(symbol:str, quote):
         return False
 
 
-##TODO "table periodic_metrics has no column named _price_change"
 @st.cache_resource
 def load_periodic_data(symbol:str, period:str, data):
     # data = clean_stock(symbol, period)
     conn = connect_db()
     try:
+        company_id = conn.execute(
+            'SELECT id FROM companies WHERE symbol=?',
+            (symbol.upper(),)
+        ).fetchone()[0]
+        
         for _, row in data.iterrows():
             conn.execute(
                 '''
                 INSERT OR REPLACE INTO periodic_metrics
-                (company_id, date, open, high, low, close, adjusted_close,volume, dividend_amt,
-                _range, _return, _price_change, _avg_price, _open_to_close_ratio, _price_direction)
-                SELECT (
-                    (SELECT id FROM companies where symbol=?),
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-                )
-                '''.format(period, period, period, period, period, period),
+                (company_id, date, open, high, low, close, adjusted_close, volume, dividend_amt,
+                _range, _return, _price_change, _avg_price, open_to_close_rt, _price_dir)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''',
                 (
-                    # symbol.upper(),
+                    company_id,
                     row['date'],
                     row.get('open'),
                     row.get('high'),
@@ -109,21 +116,23 @@ def load_periodic_data(symbol:str, period:str, data):
                     row.get('adj_close'),
                     row.get('volume'),
                     row.get('dividend_amt'),
-                    row.get(period+'_range'),
-                    row.get(period+'_return'),
-                    row.get(period+'_price_change'),
-                    row.get(period+'_avg_price'),
-                    row.get(period+'_open_to_close_rt'),
-                    row.get(period+'_price_dir')
+                    row.get(f'{period}_range'),
+                    row.get(f'{period}_return'),
+                    row.get(f'{period}_price_change'),
+                    row.get(f'{period}_avg_price'),
+                    row.get(f'{period}_open_to_close_rt'),
+                    row.get(f'{period}_price_dir')
                 )
             )
         conn.commit()
     except Exception as e:
-        logger.error(f"Error inserting data for {symbol}: {e}")
+        logger.error(f'Error inserting periodic data for {symbol}: {e}')
         return False
     finally:
         conn.close()
         return True
+
+
 
 @st.cache_resource
 def retrieve_company_data(symbol:str):
@@ -144,21 +153,27 @@ def retrieve_company_data(symbol:str):
     finally:
         conn.close()
 
-##TODO Error retrieving data for MSFT: no such column: symbol
+
+
 def retrieve_periodic_data(symbol:str):
     
     try:
         conn = connect_db()
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        cur.execute('SELECT * FROM periodic_metrics WHERE symbol =?', (symbol,))
-        result = cur.fetchmany()
+        cur.execute('''
+                SELECT periodic_metrics.*
+                FROM periodic_metrics
+                INNER JOIN companies ON periodic_metrics.company_id = companies.id
+                WHERE companies.symbol = ?
+                ''', (symbol.upper(),))
+        result = cur.fetchall()
         if result:
-            return dict(result)
+            return [dict(row) for row in result]
         return None
     
     except Exception as e:
-        logger.error(f'Error retrieving data for {symbol}: {e}')
+        logger.error(f'Error retrieving periodic data for {symbol}: {e}')
         return None
     finally:
         conn.close()

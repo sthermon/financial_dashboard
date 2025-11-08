@@ -46,17 +46,3 @@ def clean_company_info(df):
      data.columns = column_names
      return data
 
-##TODO format day entry
-def clean_daily_info(symbol:str):
-    pass
-    # quote = daily_activity(symbol)
-    # if isinstance(quote, pd.DataFrame):
-    #     data = pd.DataFrame.from_dict(quote)
-    #     data = data.infer_objects().reset_index().rename(columns={'index':'Date'})
-    #     # success = load_daily_data(symbol, data)
-    #     # if success:
-    #     #     print(f'Data added for {symbol}')
-    #     return data #if success else f'Failed to load data for {symbol}'
-    # else:
-    #     print(f'Unable to open file: Filetype: {type(quote)}')
-

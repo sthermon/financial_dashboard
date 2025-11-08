@@ -1,4 +1,5 @@
 import streamlit as st
+
 from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry
 from data_ingestion.fetch_data import quote_data
 from utils.db_connection import init_db, connect_db
@@ -8,9 +9,8 @@ def get_db_connection():
     return connect_db()
 
 st.title("📈 Financial Dashboard")
-
-st.write('-------')
-# st.session_state
+st.divider()
+# Search imput
 st.write('Enter company ticker or Symbol:')
 query = st.text_input(' ', placeholder='Enter a company ticker (e.g., AAPL, MSFT, TSLA):', key='search', max_chars=20, width=500)
 user_clicked = st.button('Search')
@@ -19,25 +19,35 @@ if query:
     with st.spinner('Fetching results...'):
         print(f'Passing the values for {query}')
         lookup_company = quote_data(query)
-        options = [f'{i}. {company.symbol} - {company.longname} - ({company.typeDisp})'
+    if not lookup_company:
+        st.error('Company not found ⚠️')
+        
+    else:
+        options = [f'{i}. {company.symbol} - {company.shortname} - ({company.typeDisp})'
                    for i, company in enumerate(lookup_company, 1)]
         
         selected_option = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
         prompt = int(selected_option[0])
-        selected_company = lookup_company[prompt - 1]
-        symbol = selected_company.symbol
-        
+        popover = st.popover('show company details')
+        show = popover.checkbox('Show company details', True)
         if prompt:
-            daily_quote = st.dataframe(company_info_day(symbol))
-            dossier = st.dataframe(get_company_info(symbol))
-            
-            first_batch = submit_historic_inquiry(symbol)
-            batch = st.dataframe(first_batch)
-            # st.subheader("Daily data")
-            # st.table(daily_quote)
+            selected_company = lookup_company[prompt - 1]
+            symbol = selected_company.symbol
 
-            # st.subheader("Company info")
-            # st.table(dossier)
+            st.session_state.setdefault('selected_symbol', None)
+            if st.session_state.selected_symbol != symbol:
+                st.session_state.selected_symbol = symbol
+                with st.spinner('Fetching company data...'):
+                    
+                    
+                    if show:
+                        dossier = st.dataframe(get_company_info(symbol))
+                    daily_quote = st.dataframe(company_info_day(symbol))
+                        
+                    
+                    first_batch = submit_historic_inquiry(symbol)
+                    batch = st.dataframe(first_batch)
+            # st.subheader("Daily data")
             
         else:
             st.error('Company not found ⚠️')

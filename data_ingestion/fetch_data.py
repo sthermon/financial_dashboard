@@ -17,14 +17,14 @@ def quote_data(symbol:str) -> tuple:
     '''
     search_results = yf.Search(symbol, max_results=5, news_count=0) 
     query = search_results.all
-    Stocks = namedtuple('Stocks', ['symbol', 'longname', 'typeDisp'])
+    Stocks = namedtuple('Stocks', ['symbol', 'shortname', 'typeDisp'])
     try:
         companies = query.get('quotes', [])
         results = [
             Stocks(
-            company['symbol'],
-            company['longname'],
-            company['typeDisp']
+            company.get('symbol'),
+            company.get('shortname', None),
+            company.get('typeDisp')
         )
         for company in companies
         ]
@@ -34,6 +34,7 @@ def quote_data(symbol:str) -> tuple:
         
     return results
 
+
 @st.cache_data
 def company_info(symbol:str):
     
@@ -41,7 +42,7 @@ def company_info(symbol:str):
         company = yf.Ticker(symbol)
         info = company.info
         summary = {
-            'name':info['displayName'],
+            'name':info['shortName'],
             'symbol':info['symbol'],
             'sector':info['sector'],
             'open':info['open'],

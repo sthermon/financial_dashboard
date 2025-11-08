@@ -23,18 +23,16 @@ CREATE TABLE IF NOT EXISTS companies (
 -- Financial metrics table
 
 CREATE TABLE IF NOT EXISTS financial_metrics (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    global_id INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE,
     symbol TEXT,
     open REAL,
     high REAL,
     low REAL,
-    price REAL,
-    previous_close REAL,
-    volume NUMERIC,
-    change REAL,
-    change_percentage REAL,
-    global_id INTEGER NOT NULL,
+    close REAL,
+    volume REAL,
+    dividends NUMERIC,
+    stock_splits REAL,
     FOREIGN KEY(global_id) REFERENCES companies(id)
     UNIQUE(global_id, date)
 );
@@ -42,8 +40,7 @@ CREATE TABLE IF NOT EXISTS financial_metrics (
 -- Periodic metrics table
 
 CREATE TABLE IF NOT EXISTS periodic_metrics (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_id INTEGER NOT NULL,
+    company_id INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE,
     open REAL,
     high REAL,
@@ -54,10 +51,10 @@ CREATE TABLE IF NOT EXISTS periodic_metrics (
     dividend_amt NUMERIC,
     _range REAL,
     _return REAL,
-    _price_chge REAL,
+    _price_change REAL,
     _avg_price REAL,
     open_to_close_rt REAL,
-    price_dir TEXT,
+    _price_dir TEXT,
     FOREIGN KEY(company_id) REFERENCES companies(id)
     UNIQUE(company_id, date)
 );

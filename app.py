@@ -1,56 +1,84 @@
 import streamlit as st
-
-from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry
+import sqlite3
+import pandas as pd
+import plotly.express as px
+from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views
 from data_ingestion.fetch_data import quote_data
 from utils.db_connection import init_db, connect_db
 
 init_db()
-def get_db_connection():
-    return connect_db()
 
 st.title("📈 Financial Dashboard")
 st.divider()
-# Search imput
-st.write('Enter company ticker or Symbol:')
-query = st.text_input(' ', placeholder='Enter a company ticker (e.g., AAPL, MSFT, TSLA):', key='search', max_chars=20, width=500)
-user_clicked = st.button('Search')
 
-if query:
+st.subheader('Enter company name or Symbol:')
+company = st.text_input(' ', placeholder='e.g., Apple, Tesla / NVDA, MSFT:', key='search', max_chars=20, width=500)
+user_clicked = st.checkbox('Search a list of companies',  value=False, key='company_list')
+frequency = st.radio(
+    'Data frequency',
+    ['weekly', 'monthly'],
+    label_visibility='collapsed',
+    key = 'frequency',
+    horizontal=True,
+    # disabled=st.sesion_state.disabled
+)
+
+if company and not user_clicked:
+    with st.spinner('Drawing company dossier...'):
+        try:
+            with st.container():
+                folder = st.dataframe(get_company_info((company.upper())))
+                company_day = st.dataframe(company_info_day(company.upper()))
+                submit_historic_inquiry(company, frequency)
+                
+            st.subheader(f'{company} {frequency.title()} Performance Overview')
+            
+            dashboard_views(company.upper(), frequency=frequency)
+           
+            
+        except (KeyError, TypeError, ValueError) as e:
+            print(f'Unable to complete search: {e}')
+            st.error('company not found, please verify your search.')
+
+
+
+if company and user_clicked:
     with st.spinner('Fetching results...'):
-        print(f'Passing the values for {query}')
-        lookup_company = quote_data(query)
-    if not lookup_company:
-        st.error('Company not found ⚠️')
-        
-    else:
-        options = [f'{i}. {company.symbol} - {company.shortname} - ({company.typeDisp})'
-                   for i, company in enumerate(lookup_company, 1)]
-        
-        selected_option = st.selectbox('Please select the ticker company: ', options, width=500, key='select')
-        prompt = int(selected_option[0])
-        popover = st.popover('show company details')
-        show = popover.checkbox('Show company details', True)
-        if prompt:
-            selected_company = lookup_company[prompt - 1]
-            symbol = selected_company.symbol
-
-            st.session_state.setdefault('selected_symbol', None)
-            if st.session_state.selected_symbol != symbol:
-                st.session_state.selected_symbol = symbol
-                with st.spinner('Fetching company data...'):
+        # print(f'Passing the values for {company}')
+        lookup_company = quote_data(company)
+        if lookup_company:
+            options = [f'{i}. {company.symbol} - {company.shortname} - ({company.typeDisp})'
+                    for i, company in enumerate(lookup_company, 1)]
+            
+            selected_option = st.selectbox('Select the company: ', options, width=500, key='selection')
+            prompt = int(selected_option[0])
+            try:
+                with st.container():
                     
-                    
-                    if show:
-                        dossier = st.dataframe(get_company_info(symbol))
-                    daily_quote = st.dataframe(company_info_day(symbol))
+                    if prompt:
+                        selected_company = lookup_company[prompt - 1]
+                        symbol = selected_company.symbol
+                        with st.spinner('Fetching company data...'):
+                            
+                            st.dataframe(get_company_info(symbol))
+                            st.dataframe(company_info_day(symbol)) 
+                            submit_historic_inquiry(symbol, frequency)
+                            
+                            st.subheader(f'{company} {frequency.title()} Performance Overview')
+            
+                            dashboard_views(company.upper(), frequency=frequency)
+                            
+                            
+                            
+            except (KeyError, TypeError, ValueError) as e:
+                print(f'Unable to complete search: {e}')
+                st.error('company not found, please verify your search.')
+                            
+else:
+    st.error(f'{company} not found, try with other company.⚠️')
                         
-                    
-                    first_batch = submit_historic_inquiry(symbol)
-                    batch = st.dataframe(first_batch)
-            # st.subheader("Daily data")
-            
-        else:
-            st.error('Company not found ⚠️')
-        #     st.success(f'✅ Fetching {query} overview.')
-#         st.success(f"📥 Data for {ticker} saved to database.")
-            
+
+# st.session_state.setdefault('selected_symbol', None)
+# if st.session_state.selected_symbol != symbol:
+#     st.session_state.selected_symbol = symbol
+    #st.session_state.frequency = True

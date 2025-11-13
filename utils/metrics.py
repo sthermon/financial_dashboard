@@ -2,18 +2,21 @@ import numpy as np
 import pandas as pd
 
 
-def price_metrics(df, period:str):
-
-    df[period+'_range'] = df['high'] - df['low']
-    df[period+'_return'] = df['adj_close'].pct_change() *100
-    df[period+'_price_change'] = (df['close'] - df['open'])/df['open'] * 100
-    df[period+'_avg_price'] = (df['high'] + df['low'] + df['close']) / 3
-    df[period+'_open_to_close_rt'] = df['open'] / df['close']
-    df[period+'_price_dir'] = df.apply(lambda row: 'down' if row['close'] < row['open'] else 'up', axis=1)
-    
-    round_metrics = [period+'_return', period+'_price_change', period+'_avg_price', period+'_open_to_close_rt']
+def price_metrics(df, period: str):
+    '''
+    Function that calculates and add aggregated metrics based on a frequency and range of values form the company
+    returns a formatted Dataframe
+    '''
+    df['range'] = df['high'] - df['low']
+    df['return'] = df['adj_close'].pct_change() * 100
+    df['price_change'] = (df['close'] - df['open'])/df['open'] * 100
+    df['avg_price'] = (df['high'] + df['low'] + df['close']) / 3
+    df['open_to_close_rt'] = df['open'] / df['close']
+    df['price_dir'] = df.apply(lambda row: 'down' if row['close'] < row['open'] else 'up', axis=1)
+    df['frequency'] = df.apply(lambda row: 'weekly' if period == 'weekly' else 'monthly' if period == 'monthly' else 'other')
+    round_metrics = ['return', 'price_change', 'avg_price', 'open_to_close_rt']
     df[round_metrics] = df[round_metrics].round(3)
-    
+        
     return df
 
 

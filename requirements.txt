@@ -6,3 +6,4 @@ streamlit_searchbox
 rapidfuzz
 requests
 pyarrow
+plotly

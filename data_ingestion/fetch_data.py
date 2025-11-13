@@ -37,7 +37,9 @@ def quote_data(symbol:str) -> tuple:
 
 @st.cache_data
 def company_info(symbol:str):
-    
+    '''
+        Function that selects and filter company information returning a dictionay for procesing.
+    '''
     try:
         company = yf.Ticker(symbol)
         info = company.info
@@ -49,7 +51,6 @@ def company_info(symbol:str):
             'current_price':info['currentPrice'],
             'previous_close':info['previousClose'],
             'volume':info['volume'],
-            'averageVolume':info['averageVolume'],
             'eps_current_year':info['epsCurrentYear'],
             'week_52_high':info['fiftyTwoWeekHigh'],
             'week_52_low':info['fiftyTwoWeekLow'],
@@ -66,7 +67,9 @@ def company_info(symbol:str):
     
 @st.cache_data
 def daily_activity(symbol:str):
-    
+    '''
+        Function that request company information on a day basis.
+    '''
     try:
         ticker = yf.Ticker(symbol)
         ticker_day = ticker.history(period='1d')
@@ -80,7 +83,9 @@ def daily_activity(symbol:str):
 
 @st.cache_data(show_spinner=False)
 def quote_historic_data(symbol:str, period:str):
-    
+    '''
+        Function that pulls information from Alphavantage from monthly or weekly basis.
+    '''
     series_list = ['TIME_SERIES_MONTHLY_ADJUSTED', 'TIME_SERIES_WEEKLY_ADJUSTED']
     frequency = series_list[0] if period == 'monthly' else series_list[1] if period == 'weekly' else None
     

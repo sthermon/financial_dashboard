@@ -16,27 +16,25 @@ def load_company_data(symbol:str, quote):
             conn.execute(
                 '''
                 INSERT OR REPLACE INTO companies(
-                name, symbol, sector, open, current_price, previous_close, volume, average_volume, 
-                eps_current_year, week_52_high, week_52_low, payout_ratio, target_mean_price, 
-                dividend_rate, market_sentiment
+                name, symbol, sector, open, current_price, previous_close, volume, eps_current_year, 
+                week_52_high, week_52_low, payout_ratio, target_mean_price, dividend_rate, market_sentiment
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 '''
                 , (
             quote.get('name'),
             quote.get('symbol'),
             quote.get('sector'),
-            float(quote.get('open')),
-            float(quote.get('current_price')),
-            float(quote.get('previous_close')),
+            float(quote.get('open', 0)),
+            float(quote.get('current_price', 0)),
+            float(quote.get('previous_close', 0)),
             int(quote.get('volume', 0)),
-            int(quote.get('average_volume', 0)),
-            float(quote.get('eps_current_year')),
-            float(quote.get('week_52_high')),
-            float(quote.get('week_52_low')),
-            float(quote.get('payout_ratio')),
-            float(quote.get('target_mean_price')),
-            quote.get('dividend_rate'),
+            float(quote.get('eps_current_year', 0)),
+            float(quote.get('week_52_high', 0)),
+            float(quote.get('week_52_low', 0)),
+            float(quote.get('payout_ratio', 0)),
+            float(quote.get('target_mean_price', 0)),
+            quote.get('dividend_rate', 0),
             quote.get('market_sentiment'),
             )
         )
@@ -51,7 +49,9 @@ def load_company_data(symbol:str, quote):
    
 @st.cache_resource
 def load_daily_data(symbol:str, quote):
-    
+    '''
+        Function that submit information per day per company into the local database.
+    '''
     try:
         with connect_db() as conn:
             cursor = conn.cursor()
@@ -90,7 +90,10 @@ def load_daily_data(symbol:str, quote):
 
 @st.cache_resource
 def load_periodic_data(symbol:str, period:str, data):
-    # data = clean_stock(symbol, period)
+    '''
+        Function that loads weekly or monthly information per company 
+        into the database along with the calculated metrics.
+    '''
     conn = connect_db()
     try:
         company_id = conn.execute(
@@ -103,8 +106,8 @@ def load_periodic_data(symbol:str, period:str, data):
                 '''
                 INSERT OR REPLACE INTO periodic_metrics
                 (company_id, date, open, high, low, close, adjusted_close, volume, dividend_amt,
-                _range, _return, _price_change, _avg_price, open_to_close_rt, _price_dir)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                range, return, price_change, avg_price, open_to_close_rt, price_dir, frequency)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''',
                 (
                     company_id,
@@ -115,13 +118,14 @@ def load_periodic_data(symbol:str, period:str, data):
                     row.get('close'),
                     row.get('adj_close'),
                     row.get('volume'),
-                    row.get('dividend_amt'),
-                    row.get(f'{period}_range'),
-                    row.get(f'{period}_return'),
-                    row.get(f'{period}_price_change'),
-                    row.get(f'{period}_avg_price'),
-                    row.get(f'{period}_open_to_close_rt'),
-                    row.get(f'{period}_price_dir')
+                    row.get('dividend_amt', 0),
+                    row.get('range'),
+                    row.get('return'),
+                    row.get('price_change'),
+                    row.get('avg_price'),
+                    row.get('open_to_close_rt'),
+                    row.get('price_dir'),
+                    row.get('frequency')
                 )
             )
         conn.commit()

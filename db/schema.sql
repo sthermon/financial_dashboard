@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS companies (
     current_price REAL,
     previous_close REAL,
     volume NUMERIC,
-    average_volume NUMERIC,
     eps_current_year REAL,
     week_52_high REAL,
     week_52_low REAL,
@@ -49,12 +48,13 @@ CREATE TABLE IF NOT EXISTS periodic_metrics (
     adjusted_close REAL,
     volume NUMERIC,
     dividend_amt NUMERIC,
-    _range REAL,
-    _return REAL,
-    _price_change REAL,
-    _avg_price REAL,
+    range REAL,
+    return REAL,
+    price_change REAL,
+    avg_price REAL,
     open_to_close_rt REAL,
-    _price_dir TEXT,
+    price_dir TEXT,
+    frequency TEXT,
     FOREIGN KEY(company_id) REFERENCES companies(id)
-    UNIQUE(company_id, date)
+    UNIQUE(company_id, date, frequency)
 );

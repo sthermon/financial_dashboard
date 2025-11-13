@@ -1,18 +1,28 @@
 ## Financial Dashboard 📊
 
 ## Overview 
-An interactive financial dashboard built with Streamlit that displays key company metrics, tracks performance over time, and highlights potential trends.
-Enriched with custom metrics and rendered visualizations through Plotly, it's a hybrid application which pulls and stores locally in SQLite for fast querying.
+An interactive **financial dashboard** built with **Streamlit** that displays key company metrics, tracks performance over time, and visualizes potential trends.  
+The app combines **real-time API data** with **locally stored insights in SQLite** for fast querying and dynamic analytics.  
 
-Data is mix fetched from a yfinance and Alpha Vantage <img width="28" height="28" align="right" alt="www alphavantage" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
+---
+## Key features:
+- Interactive company search and dossier view  
+- Custom-calculated metrics (price range, returns, average price, etc.)  
+- Multiple frequency tracking (daily, weekly, monthly)  
+- Dynamic Plotly visualizations for trend exploration  
+- Persistent local database caching for efficient performance 
 
---
+Data is fetched from **Yahoo Finance (yfinance)** and **Alpha Vantage** APIs.  
+<img width="28" height="28" align="right" alt="Alpha Vantage logo" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
+
 ## Key Objectives
-- Project end to end utilizing python to create and structure application.
-- Create and manage database through SQL usage.
-- Implementation of different visualizations dynamically plotting company trend.
 
---
+- Develop a **fully functional Python application** for financial data analysis.  
+- Design and manage a **SQLite database schema** for structured storage.  
+- Integrate **data ingestion, transformation, and visualization** into one cohesive pipeline.  
+- Implement multiple **Plotly charts** that dynamically reflect a company’s market behavior.  
+
+---
 ## Project Structure
 Financial_dashboard/
 │
@@ -48,12 +58,12 @@ Financial_dashboard/
 
 
 ## How to Run
-1. Clone this repo
+1. **Clone this repository**
 2. Install requirements:
    ```bash
+   git clone https://github.com/sthermon/financial_dashboard.git
    pip install -r requirements.txt
+   cd financial_dashboard
 
-
-   # 📈 financial_dashboard
-
+📈 [financial_dashboard] (https://github.com/sthermon/financial_dashboard.git)
 ---

@@ -2,8 +2,8 @@
 
 ## Overview 
 An interactive financial dashboard built with Streamlit that displays key company metrics, tracks performance over time, and highlights potential trends.
-Data is mix fetched from a yfinance and Alpha Vantage <img width="256" height="256" alt="www alphavantage" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
-, enriched with custom metrics and rendered visualizations through Plotly, it's a hybrid application which pulls and stores locally in SQLite for fast querying.
+Data is mix fetched from a yfinance and Alpha Vantage <img width="64" height="64" alt="www alphavantage" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
+Enriched with custom metrics and rendered visualizations through Plotly, it's a hybrid application which pulls and stores locally in SQLite for fast querying.
 
 --
 ## Key Objectives
@@ -53,6 +53,6 @@ Financial_dashboard/
    pip install -r requirements.txt
 
 
-   # 🏦 Loan Default Prediction — Lending Club Dataset
+   # 📈 financial_dashboard
 
 ---

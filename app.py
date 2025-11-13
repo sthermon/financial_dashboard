@@ -1,5 +1,4 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
 import plotly.express as px
 from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views
@@ -48,7 +47,6 @@ if company and not user_clicked:
 
 if company and user_clicked:
     with st.spinner('Fetching results...'):
-        # print(f'Passing the values for {company}')
         lookup_company = quote_data(company)
         if lookup_company:
             options = [f'{i}. {company.symbol} - {company.shortname} - ({company.typeDisp})'

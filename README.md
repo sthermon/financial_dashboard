@@ -4,7 +4,7 @@
 An interactive financial dashboard built with Streamlit that displays key company metrics, tracks performance over time, and highlights potential trends.
 Enriched with custom metrics and rendered visualizations through Plotly, it's a hybrid application which pulls and stores locally in SQLite for fast querying.
 
-Data is mix fetched from a yfinance and Alpha Vantage <img width="32" height="32" align="right" alt="www alphavantage" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
+Data is mix fetched from a yfinance and Alpha Vantage <img width="28" height="28" align="right" alt="www alphavantage" src="https://github.com/user-attachments/assets/caa59cf9-1d08-4e74-bb04-fa83bd4caeb6" />
 
 --
 ## Key Objectives

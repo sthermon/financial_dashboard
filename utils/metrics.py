@@ -13,7 +13,7 @@ def price_metrics(df, period: str):
     df['avg_price'] = (df['high'] + df['low'] + df['close']) / 3
     df['open_to_close_rt'] = df['open'] / df['close']
     df['price_dir'] = df.apply(lambda row: 'down' if row['close'] < row['open'] else 'up', axis=1)
-    df['frequency'] = df.apply(lambda row: 'weekly' if period == 'weekly' else 'monthly' if period == 'monthly' else 'other')
+    df['frequency'] = period
     round_metrics = ['return', 'price_change', 'avg_price', 'open_to_close_rt']
     df[round_metrics] = df[round_metrics].round(3)
         

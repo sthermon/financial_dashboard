@@ -27,7 +27,6 @@ def clean_stock(dataframe, frequency:str):
     null_values = company_data.isna().sum()
     clean_data = company_data.dropna()
     logger.info(f'A total of {null_values.sum()} were dropped')
-    print(f'Columns: {clean_data.columns}')
     new_data = reshape_data(clean_data, frequency)
     return new_data
 
@@ -47,11 +46,9 @@ def reshape_data(df, period:str):
         'dividend amount': 'dividend_amt'
     }
     data = df.rename(columns = n_columns)
-    update_data = price_metrics(data, period)
+    update_data = price_metrics(data, period.lower())
     
     dataf = pd.DataFrame(update_data)
-    print(dataf.columns)
-    print(dataf.head())
     return dataf
 
 

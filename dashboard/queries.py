@@ -76,14 +76,15 @@ def dashboard_views(symbol:str, frequency:str):
     
     # View with Price and Volume Trend
     price_query = '''
-        SELECT p.return, p.price_change
+        SELECT p.date, p.close, p.volume
         FROM periodic_metrics as p
         JOIN companies as c ON p.company_id = c.id
         WHERE c.symbol = ?
+        ORDER BY p.date
     '''
     df_price = pd.read_sql(price_query, conn, params=(symbol,))
     fig_price = px.line(df_price, x='date', y='close',
-                        title=f'{symbol}{frequency.title} Price Trend')
+                        title=f'{symbol} {frequency.title()} Price Trend')
     fig_volume = px.bar(df_price, x='date', y='volume',
                         title='Trading Volume', opacity=0.6)
     
@@ -96,9 +97,8 @@ def dashboard_views(symbol:str, frequency:str):
     '''
     df_change = pd.read_sql(price_change, conn, params=(symbol,))
     fig_change_dist = px.histogram(df_change, x='return', nbins=30,
-                                   title=f'{symbol}{frequency.title()}Price & Return Distribution')
-    fig_price_box = px.box(df_change, x='price_change',
-                           title='Price Change Spread')
+                                   title=f'{symbol} {frequency.title()} Price & Return Distribution')
+    fig_price_box = px.box(df_change, x='price_change',title='Price Change Spread')
     
     # View with average price and adjusted close
     avg_price = '''

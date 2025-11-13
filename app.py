@@ -4,23 +4,27 @@ import pandas as pd
 import plotly.express as px
 from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views
 from data_ingestion.fetch_data import quote_data
-from utils.db_connection import init_db, connect_db
+from utils.db_connection import init_db
 
 init_db()
 
 st.title("📈 Financial Dashboard")
 st.divider()
-
 st.subheader('Enter company name or Symbol:')
+
 company = st.text_input(' ', placeholder='e.g., Apple, Tesla / NVDA, MSFT:', key='search', max_chars=20, width=500)
-user_clicked = st.checkbox('Search a list of companies',  value=False, key='company_list')
-frequency = st.radio(
-    'Data frequency',
-    ['weekly', 'monthly'],
-    label_visibility='collapsed',
-    key = 'frequency',
-    horizontal=True,
-    # disabled=st.sesion_state.disabled
+
+col1, col2 = st.columns(2)
+with col1:
+    user_clicked = st.checkbox('Search a list of companies',  value=False, key='company_list')
+with col2:
+    frequency = st.radio(
+        'Data frequency',
+        ['Weekly', 'Monthly'],
+        label_visibility='collapsed',
+        key = 'frequency',
+        horizontal=True,
+        # disabled=st.sesion_state.disabled
 )
 
 if company and not user_clicked:
@@ -29,11 +33,11 @@ if company and not user_clicked:
             with st.container():
                 folder = st.dataframe(get_company_info((company.upper())))
                 company_day = st.dataframe(company_info_day(company.upper()))
-                submit_historic_inquiry(company, frequency)
+                submit_historic_inquiry(company, frequency.lower())
                 
             st.subheader(f'{company} {frequency.title()} Performance Overview')
             
-            dashboard_views(company.upper(), frequency=frequency)
+            dashboard_views(company.upper(), frequency=frequency.lower())
            
             
         except (KeyError, TypeError, ValueError) as e:
@@ -62,11 +66,11 @@ if company and user_clicked:
                             
                             st.dataframe(get_company_info(symbol))
                             st.dataframe(company_info_day(symbol)) 
-                            submit_historic_inquiry(symbol, frequency)
+                            submit_historic_inquiry(symbol, frequency.lower())
                             
                             st.subheader(f'{company} {frequency.title()} Performance Overview')
             
-                            dashboard_views(company.upper(), frequency=frequency)
+                            dashboard_views(company.upper(), frequency=frequency.lower())
                             
                             
                             
@@ -74,10 +78,9 @@ if company and user_clicked:
                 print(f'Unable to complete search: {e}')
                 st.error('company not found, please verify your search.')
                             
-else:
-    st.error(f'{company} not found, try with other company.⚠️')
+    # else:
+    #     st.error(f'{company} not found, try with other company.⚠️')
                         
-
 # st.session_state.setdefault('selected_symbol', None)
 # if st.session_state.selected_symbol != symbol:
 #     st.session_state.selected_symbol = symbol

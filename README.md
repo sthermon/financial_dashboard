@@ -90,4 +90,3 @@ Financial_dashboard/
    # 📈 financial_dashboard
 
 ---
->>>>>>> 5e40a9d2 (ignore testing database)

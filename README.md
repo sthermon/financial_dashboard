@@ -1,7 +1,6 @@
 ## Financial Dashboard 📊
 
 ## Overview 
-<<<<<<< HEAD
 An interactive **financial dashboard** built with **Streamlit** that displays key company metrics, tracks performance over time, and visualizes potential trends.  
 The app combines **real-time API data** with **locally stored insights in SQLite** for fast querying and dynamic analytics.  
 

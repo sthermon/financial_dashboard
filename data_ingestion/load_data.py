@@ -1,9 +1,5 @@
 import sqlite3
-import pandas as pd
 import streamlit as st
-import json
-from data_ingestion.fetch_data import quote_historic_data
-from data_ingestion.clean_data import clean_stock
 from utils.db_connection import connect_db, logger
 
 

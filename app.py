@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
 from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views
 from data_ingestion.fetch_data import quote_data
 from utils.db_connection import init_db
@@ -23,25 +21,23 @@ with col2:
         label_visibility='collapsed',
         key = 'frequency',
         horizontal=True,
-        # disabled=st.sesion_state.disabled
 )
 
 if company and not user_clicked:
     with st.spinner('Drawing company dossier...'):
         try:
             with st.container():
-                folder = st.dataframe(get_company_info((company.upper())))
+                folder = st.dataframe(get_company_info(company.upper()))
                 company_day = st.dataframe(company_info_day(company.upper()))
                 submit_historic_inquiry(company, frequency.lower())
                 
-            st.subheader(f'{company} {frequency.title()} Performance Overview')
+            st.subheader(f'{company}: {frequency.title()} Performance Overview')
             
             dashboard_views(company.upper(), frequency=frequency.lower())
            
             
-        except (KeyError, TypeError, ValueError) as e:
-            print(f'Unable to complete search: {e}')
-            st.error('company not found, please verify your search.')
+        except Exception as e:
+            st.error(f'Unable to complete search: {e}')
 
 
 
@@ -60,26 +56,19 @@ if company and user_clicked:
                     if prompt:
                         selected_company = lookup_company[prompt - 1]
                         symbol = selected_company.symbol
-                        with st.spinner('Fetching company data...'):
+                        with st.spinner('Drawing company dossier...'):
                             
                             st.dataframe(get_company_info(symbol))
                             st.dataframe(company_info_day(symbol)) 
                             submit_historic_inquiry(symbol, frequency.lower())
                             
-                            st.subheader(f'{company} {frequency.title()} Performance Overview')
-            
+                            st.subheader(f'{company}: {frequency.title()} Performance Overview')
+                            
                             dashboard_views(company.upper(), frequency=frequency.lower())
                             
                             
                             
-            except (KeyError, TypeError, ValueError) as e:
-                print(f'Unable to complete search: {e}')
-                st.error('company not found, please verify your search.')
+            except Exception as e:
+                st.error(f'Unable to complete search: {e}')
                             
-    # else:
-    #     st.error(f'{company} not found, try with other company.⚠️')
-                        
-# st.session_state.setdefault('selected_symbol', None)
-# if st.session_state.selected_symbol != symbol:
-#     st.session_state.selected_symbol = symbol
-    #st.session_state.frequency = True
+

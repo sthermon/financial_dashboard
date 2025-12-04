@@ -210,3 +210,4 @@ __marimo__/
 secrets.toml
 debug.py
 .Streamlit
+financial_data.db

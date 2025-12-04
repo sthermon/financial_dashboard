@@ -60,7 +60,6 @@ def submit_historic_inquiry(symbol:str, period=str):
             return 'Unable to complete API call'
         data = clean_stock(df, period)
         load_periodic_data(symbol, period, data)
-        #clean_data = pd.DataFrame(data)
         return 'Data uploaded successfully!'
     
     except requests.RequestException as e:
@@ -84,7 +83,7 @@ def dashboard_views(symbol:str, frequency:str):
     '''
     df_price = pd.read_sql(price_query, conn, params=(symbol,))
     fig_price = px.line(df_price, x='date', y='close',
-                        title=f'{symbol} {frequency.title()} Price Trend')
+                        title=f'{symbol}: {frequency.title()} Price Trend')
     fig_volume = px.bar(df_price, x='date', y='volume',
                         title='Trading Volume', opacity=0.6)
     
@@ -97,19 +96,19 @@ def dashboard_views(symbol:str, frequency:str):
     '''
     df_change = pd.read_sql(price_change, conn, params=(symbol,))
     fig_change_dist = px.histogram(df_change, x='return', nbins=30,
-                                   title=f'{symbol} {frequency.title()} Price & Return Distribution')
-    fig_price_box = px.box(df_change, x='price_change',title='Price Change Spread')
+                                   title=f'{symbol}: {frequency.title()} Price & Return Distribution')
+    fig_price_box = px.box(df_change, x='price_change', title='Price Change Spread', )
     
-    # View with average price and adjusted close
+    # View with average price range and adjusted close
     avg_price = '''
-        SELECT p.avg_price, p.adjusted_close, p.date
+        SELECT p.range, p.adjusted_close, p.date
         FROM periodic_metrics as p
         JOIN companies as c ON p.company_id = c.id
         WHERE c.symbol = ?
     '''
     df_avg = pd.read_sql(avg_price, conn, params=(symbol,))
-    fig_avg_close = px.scatter(df_avg, x='avg_price', y='adjusted_close',
-                               color='date', title=f'{symbol} Avg Price vs Adjusted Close')
+    fig_avg_close = px.scatter(df_avg, x='range', y='adjusted_close',
+                               color='date', title=f'{symbol}: Price range vs Adjusted Close')
     fig_avg_close.update_traces(marker=dict(size=8, opacity=0.7))
     
     #View with direction summary
@@ -129,12 +128,12 @@ def dashboard_views(symbol:str, frequency:str):
     
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(fig_price)
-        st.plotly_chart(fig_change_dist)
+        st.plotly_chart(fig_price, width='stretch')
+        st.plotly_chart(fig_change_dist, width='stretch',)
         
     with col2:
-        st.plotly_chart(fig_volume)
-        st.plotly_chart(fig_price_box)
+        st.plotly_chart(fig_volume, width='stretch')
+        st.plotly_chart(fig_price_box, width='stretch')
         
-    st.plotly_chart(fig_avg_close)
-    st.plotly_chart(fig_dir)
+    st.plotly_chart(fig_avg_close, width='stretch')
+    st.plotly_chart(fig_dir, width='content', theme=None)

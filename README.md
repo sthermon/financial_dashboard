@@ -23,7 +23,6 @@ Data is fetched from **Yahoo Finance (yfinance)** and **Alpha Vantage** APIs.
 - Implement multiple **Plotly charts** that dynamically reflect a company’s market behavior.  
 
 ---
-=======
 An interactive financial dashboard built with Streamlit that displays key company metrics, tracks performance over time, and highlights potential trends.
 Enriched with custom metrics and rendered visualizations through Plotly, it's a hybrid application which pulls and stores locally in SQLite for fast querying.
 
@@ -36,7 +35,6 @@ Data is mix fetched from a yfinance and Alpha Vantage <img width="28" height="28
 - Implementation of different visualizations dynamically plotting company trend.
 
 --
->>>>>>> 5e40a9d2 (ignore testing database)
 ## Project Structure
 Financial_dashboard/
 │
@@ -67,12 +65,12 @@ Financial_dashboard/
 ## Author
 **Steve Hernandez**  
 📧 [steve.hernamont@gmail.com] | 🔗 [[LinkedIn](https://www.linkedin.com/in/sthermon/)] | 🌐 []  
-
 ---
 
 
 ## How to Run
-<<<<<<< HEAD
+---
+
 1. **Clone this repository**
 2. Install requirements:
    ```bash
@@ -82,7 +80,7 @@ Financial_dashboard/
 
 📈 [financial_dashboard] (https://github.com/sthermon/financial_dashboard.git)
 ---
-=======
+
 1. Clone this repo
 2. Install requirements:
    ```bash

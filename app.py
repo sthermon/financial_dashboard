@@ -1,14 +1,21 @@
 import streamlit as st
-from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views
+from dashboard.queries import get_company_info, company_info_day, submit_historic_inquiry, dashboard_views, heatmap_companies, call_and_update
 from data_ingestion.fetch_data import quote_data
 from utils.db_connection import init_db
 
+# Initialize database
 init_db()
 
-st.title("📈 Financial Dashboard")
+st.title("📈 Markets Dashboard")
 st.divider()
-st.subheader('Enter company name or Symbol:')
 
+with st.container():
+    st.subheader('Companies wiht higher market capitalization')
+    heatmap_companies()
+
+st.subheader('Enter Symbol or search for a company name')
+
+# Searchbox
 company = st.text_input(' ', placeholder='e.g., Apple, Tesla / NVDA, MSFT:', key='search', max_chars=20, width=500)
 
 col1, col2 = st.columns(2)
@@ -23,6 +30,7 @@ with col2:
         horizontal=True,
 )
 
+# Plot graphs with no basic search
 if company and not user_clicked:
     with st.spinner('Drawing company dossier...'):
         try:
@@ -30,17 +38,15 @@ if company and not user_clicked:
                 folder = st.dataframe(get_company_info(company.upper()))
                 company_day = st.dataframe(company_info_day(company.upper()))
                 submit_historic_inquiry(company, frequency.lower())
-                
             st.subheader(f'{company}: {frequency.title()} Performance Overview')
             
             dashboard_views(company.upper(), frequency=frequency.lower())
-           
             
         except Exception as e:
             st.error(f'Unable to complete search: {e}')
 
 
-
+# Plot graphs with advanced search
 if company and user_clicked:
     with st.spinner('Fetching results...'):
         lookup_company = quote_data(company)
@@ -71,4 +77,5 @@ if company and user_clicked:
             except Exception as e:
                 st.error(f'Unable to complete search: {e}')
                             
+
 

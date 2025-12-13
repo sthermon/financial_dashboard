@@ -50,11 +50,16 @@ def company_info(symbol:str):
             'current_price':info['currentPrice'],
             'previous_close':info['previousClose'],
             'volume':info['volume'],
+            'average_volume':info['averageVolume'],
             'eps_current_year':info['epsCurrentYear'],
+            'P_to_E_ratio':info['priceEpsCurrentYear'],
             'week_52_high':info['fiftyTwoWeekHigh'],
             'week_52_low':info['fiftyTwoWeekLow'],
             'payout_ratio':info['payoutRatio'],
             'target_mean_price':info['targetMeanPrice'],
+            'all_time_high': info['allTimeHigh'],
+            'all_time_low':info['allTimeLow'],
+            'market_cap':info['marketCap'],
             'dividend_rate':info['trailingAnnualDividendRate'],
             'market_sentiment':info['recommendationKey']
         }
@@ -63,7 +68,23 @@ def company_info(symbol:str):
         logger.error(f'Search failed for {symbol}: {e}')
         return None
     
-    
+
+@st.cache_data
+def refresh_company_data(tickers:list):
+    '''
+    Function that will recall a list of saved symbols in the database and will request a fresh call to API
+    for recent data.
+    '''
+    try:
+        companies_saved = yf.Tickers(tickers)
+        portfolio = companies_saved.download(period='1mo', interval='1d',  )
+        print('raw', portfolio)
+        return portfolio
+        
+    except requests.RequestException as e:
+        logger.error(f'Unable to refresh data: {e}')
+        return None
+
 @st.cache_data
 def daily_activity(symbol:str):
     '''

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def price_metrics(df, period: str):
+def price_metrics(df, period:str):
     '''
     Function that calculates and add aggregated metrics based on a frequency and range of values form the company
     returns a formatted Dataframe

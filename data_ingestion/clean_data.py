@@ -23,9 +23,7 @@ def clean_stock(dataframe, frequency:str):
     company_data = data.copy()
     company_data = company_data.infer_objects()
     company_data.sort_index(inplace=True)
-    null_values = company_data.isna().sum()
     clean_data = company_data.dropna()
-    logger.info(f'A total of {null_values.sum()} were dropped')
     new_data = reshape_data(clean_data, frequency)
     return new_data
 

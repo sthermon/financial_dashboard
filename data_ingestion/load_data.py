@@ -4,7 +4,7 @@ from utils.db_connection import connect_db, logger
 
 
 @st.cache_resource
-def load_company_data(symbol:str, quote):
+def load_company_data(symbol:str, quote:dict):
     
     try:
         with connect_db() as conn:
@@ -12,10 +12,11 @@ def load_company_data(symbol:str, quote):
             conn.execute(
                 '''
                 INSERT OR REPLACE INTO companies(
-                name, symbol, sector, open, current_price, previous_close, volume, eps_current_year, 
-                week_52_high, week_52_low, payout_ratio, target_mean_price, dividend_rate, market_sentiment
+                name, symbol, sector, open, current_price, previous_close, volume, average_volume, eps_current_year,
+                P_to_E_ratio, week_52_high, week_52_low, payout_ratio, target_mean_price, all_time_high, all_time_low, 
+                market_cap, dividend_rate, market_sentiment
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 '''
                 , (
             quote.get('name'),
@@ -25,11 +26,16 @@ def load_company_data(symbol:str, quote):
             float(quote.get('current_price', 0)),
             float(quote.get('previous_close', 0)),
             int(quote.get('volume', 0)),
+            float(quote.get('average_volume', 0)),
             float(quote.get('eps_current_year', 0)),
+            float(quote.get('P_to_E_ratio', 0)),
             float(quote.get('week_52_high', 0)),
             float(quote.get('week_52_low', 0)),
             float(quote.get('payout_ratio', 0)),
             float(quote.get('target_mean_price', 0)),
+            float(quote.get('all_time_high', 0)),
+            float(quote.get('all_time_low', 0)),
+            float(quote.get('market_cap', 0),),
             quote.get('dividend_rate', 0),
             quote.get('market_sentiment'),
             )
@@ -60,7 +66,7 @@ def load_daily_data(symbol:str, quote):
                 date_value = row['Date'].to_pydatetime().date()
                 cursor.execute(
                     '''
-                    INSERT OR REPLACE INTO financial_metrics
+                    INSERT OR IGNORE INTO financial_metrics
                     (global_id, date, symbol, open, high, low, close, volume, dividends, stock_splits)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ''',
@@ -97,6 +103,7 @@ def load_periodic_data(symbol:str, period:str, data):
             (symbol.upper(),)
         ).fetchone()[0]
         
+        logger.info(f"Total rows to insert: {len(data)}")
         for _, row in data.iterrows():
             conn.execute(
                 '''
@@ -126,7 +133,7 @@ def load_periodic_data(symbol:str, period:str, data):
             )
         conn.commit()
     except Exception as e:
-        logger.error(f'Error inserting periodic data for {symbol}: {e}')
+        logger.error(f'Error inserting {period} periodic data for {symbol}: {e}')
         return False
     finally:
         conn.close()
